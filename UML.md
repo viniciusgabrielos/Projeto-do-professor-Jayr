@@ -74,11 +74,10 @@ classDiagram
 
     Despesa "1" <-- "0..*" Alerta
     Categoria "1" <-- "0..*" Alerta
-    OrcamentoMensal "1" <-- "0..*" Alerta
-````
+    OrcamentoMensal "1" <-- "0..*" Alerta```
 
-```
-```
+
+
 ## Relações entre as classes
 
 * **Receita e Despesa → Lançamento:** `Receita` e `Despesa` são tipos de `Lançamento`. Por isso, as duas herdam as características básicas de um lançamento financeiro.
