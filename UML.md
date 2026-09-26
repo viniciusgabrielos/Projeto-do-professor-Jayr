@@ -74,7 +74,8 @@ classDiagram
 
     Despesa "1" <-- "0..*" Alerta
     Categoria "1" <-- "0..*" Alerta
-    OrcamentoMensal "1" <-- "0..*" Alerta```
+    OrcamentoMensal "1" <-- "0..*" Alerta
+  ```  
 
 
 
