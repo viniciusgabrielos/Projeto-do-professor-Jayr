@@ -1,7 +1,7 @@
 # Sistema de Controle de Despesas Pessoais
 
 ## Diagrama UML
-[Visualizar o UML](uml.md)
+[Visualizar o UML](UML.md)
 
 ## Descrição
 
