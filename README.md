@@ -1,5 +1,8 @@
 # Sistema de Controle de Despesas Pessoais
 
+## Diagrama UML
+[Visualizar o UML](uml.md)
+
 ## Descrição
 
 Projeto desenvolvido para a disciplina de Programação Orientada a Objetos (POO), com o objetivo de desenvolver um sistema para controle de despesas pessoais.
@@ -13,7 +16,7 @@ O projeto tem como objetivo aplicar conceitos de Programação Orientada a Objet
 Entre os principais recursos planejados estão:
 
 * Cadastro e gerenciamento de categorias;
-* Registro de receitas e despesas;
+* Registro de receitas e despesas como um lançamento;
 * Controle do orçamento mensal;
 * Consulta do saldo diário;
 * Geração de relatórios financeiros;
