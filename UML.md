@@ -55,11 +55,13 @@ classDiagram
         + mostrarMesMaisEconomico()
         + mostrarComparativoUltimos3Meses()
     }
-
+    
     class Alerta {
         - data
         - mensagem
         - tipo
+        + emitir()
+        + registrar()
     }
 
 

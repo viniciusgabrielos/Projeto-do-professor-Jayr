@@ -76,7 +76,7 @@ Seus métodos consistem em mostrar despesa por categoria, mostrar despesa por fo
 
 Tem como atributo a data que ele foi emitido, a mensagem que aparecerá e o tipo, sendo esse tipo sendo um alerta pelo valor do lançamento de uma despesa ser alto, pelo valor limite ultrapassado em uma categoria, ou por um saldo mensal negativo.
 
-Não há métodos.
+Há métodos para emitir o alerta e registrar em um banco de dados.
 
 ## Estrutura do projeto
 
