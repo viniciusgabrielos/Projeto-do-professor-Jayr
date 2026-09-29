@@ -47,7 +47,7 @@ Possui métodos próprios de criar e editar uma receita.
 
 Herda de lançamento.
 
-Possui métodos próprio de criar e editar uma despesa.
+Possui métodos próprios de criar e editar uma despesa.
 
 * `Categoria`
 
@@ -73,7 +73,10 @@ Tem como atributo um mês.
 Seus métodos consistem em mostrar despesa por categoria, mostrar despesa por forma de pagamento, mostrar gastos ou ganhos na forma percentual de acordo com cada categoria, mostrar mês mais econômico e mostrar um comparativo de gastos e ganhos nos últimos 3 meses.
 
 * `Alerta`
+
 Tem como atributo a data que ele foi emitido, a mensagem que aparecerá e o tipo, sendo esse tipo sendo um alerta pelo valor do lançamento de uma despesa ser alto, pelo valor limite ultrapassado em uma categoria, ou por um saldo mensal negativo.
+
+Não há métodos.
 
 ## Estrutura do projeto
 
