@@ -70,7 +70,14 @@ class Lancamento:
         else:
             raise ValueError("A descrição deve ser informada")
 
-
+        def __str__(self):
+            return(
+            f"Valor: R$ {self.valor:.2f} | "
+            f"Categoria: {self.categoria.nome} | "
+            f"Data: {self.data} | "
+            f"Descrição: {self.descricao} | "
+            f"Forma de pagamento: {self.forma_de_pagamento}"
+        )
 
     def cadastrar(self):
         pass

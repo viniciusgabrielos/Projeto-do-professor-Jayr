@@ -10,4 +10,13 @@ class Despesa(Lancamento):
     gerar alertas quando ultrapassa limites financeiros
     estabelecidos pelo sistema.
     """
-    pass
+   
+
+    def cadastrarDespesa(self):
+        pass
+        
+
+    def editarDespesa(self):
+        pass
+
+    

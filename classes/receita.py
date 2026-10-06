@@ -9,4 +9,10 @@ class Receita(Lancamento):
     Suas informações são utilizadas no cálculo do saldo
     financeiro e no acompanhamento do orçamento mensal.
     """
-    pass
+    
+
+    def cadastrarReceita(self):
+        pass
+
+    def editarReceita(self):
+        pass
