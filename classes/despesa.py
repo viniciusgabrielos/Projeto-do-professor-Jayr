@@ -1,3 +1,5 @@
+from classes.lancamento import Lancamento
+
 class Despesa(Lancamento):
     """
     Representa uma saída de dinheiro no controle financeiro.

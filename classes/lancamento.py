@@ -1,3 +1,5 @@
+from classes.categoria import Categoria
+
 class Lancamento:
     """
     Classe base que representa um lançamento financeiro do sistema.
@@ -70,8 +72,8 @@ class Lancamento:
         else:
             raise ValueError("A descrição deve ser informada")
 
-        def __str__(self):
-            return(
+    def __str__(self):
+        return(
             f"Valor: R$ {self.valor:.2f} | "
             f"Categoria: {self.categoria.nome} | "
             f"Data: {self.data} | "

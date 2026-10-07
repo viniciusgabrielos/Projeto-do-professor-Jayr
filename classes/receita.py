@@ -1,3 +1,5 @@
+from classes.lancamento import Lancamento
+
 class Receita(Lancamento):
     """
     Representa uma entrada de dinheiro no controle financeiro.
