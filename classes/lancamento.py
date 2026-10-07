@@ -1,4 +1,5 @@
 from classes.categoria import Categoria
+from datetime import date
 
 class Lancamento:
     """
@@ -41,7 +42,7 @@ class Lancamento:
 
     @categoria.setter
     def categoria(self, categoria_cadastrada):
-        if categoria_cadastrada is not None:
+        if isinstance(categoria_cadastrada,Categoria):
             self.__categoria = categoria_cadastrada
         else:
             raise ValueError("O lançamento deve possuir uma categoria")
@@ -54,10 +55,12 @@ class Lancamento:
 
     @data.setter
     def data(self, data_cadastrada):
-        if data_cadastrada is not None:
-            self.__data = data_cadastrada
+        if not isinstance(data_cadastrada,date):
+            raise ValueError("Data não aceita")
+        
+            
         else:
-            raise ValueError("A data deve ser informada")
+            self.__data = data_cadastrada
 
     
 
