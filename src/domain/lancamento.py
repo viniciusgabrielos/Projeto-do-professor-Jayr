@@ -1,4 +1,4 @@
-from classes.categoria import Categoria
+from src.domain.categoria import Categoria
 from datetime import date
 
 class Lancamento:

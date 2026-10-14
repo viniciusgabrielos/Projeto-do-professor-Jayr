@@ -1,4 +1,4 @@
-from classes.lancamento import Lancamento
+from src.domain.lancamento import Lancamento
 
 class Despesa(Lancamento):
     """
