@@ -20,11 +20,12 @@ class Categoria:
     de limites e a geração de alertas.
     """
 
-    def __init__(self, nome, tipo, descricao, limite):
+    def __init__(self, nome, tipo, descricao = None, limite = None, id = None):
         self.nome = nome
         self.tipo = tipo
-        self.descricao = descricao
+        self.descricao = descricao if descricao else None
         self.limite = limite
+        self.id = id
 
     @property
     def nome(self):
@@ -62,6 +63,29 @@ class Categoria:
 
         else:
             raise ValueError("O limite da despesa deve ser maior que 0")
+         
+    def to_dict(self):
+        return {
+            "nome": self.nome,
+            "tipo": self.tipo.value,
+            "descricao": self.descricao,
+            "limite": self.limite,
+            "id": self.id,
+
+        }
+    @classmethod
+    def from_dict(cls,dados):
+        return cls(
+      nome = dados["nome"],
+      tipo = TipoCategoria(dados["tipo"]),
+      descricao = dados["descricao"],
+      limite = dados["limite"],
+      id = dados["id"],
+
+
+        )
+        
+    
 
     def criar(self):
         pass
