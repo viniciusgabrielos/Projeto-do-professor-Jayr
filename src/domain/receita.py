@@ -12,7 +12,16 @@ class Receita(Lancamento):
     financeiro e no acompanhamento do orçamento mensal.
     """
     
-
+    
+    def __init__(
+        self, valor, categoria, data, descricao, forma_de_pagamento
+    ):
+        super().__init__(
+            valor, categoria, data, descricao, forma_de_pagamento
+        )
+    
+    
+    
     def cadastrarReceita(self):
         pass
 

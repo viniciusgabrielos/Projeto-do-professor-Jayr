@@ -13,6 +13,13 @@ class Despesa(Lancamento):
     estabelecidos pelo sistema.
     """
    
+    def __init__(
+        self, valor, categoria, data, descricao, forma_de_pagamento
+    ):
+        super().__init__(
+            valor, categoria, data, descricao, forma_de_pagamento
+        )
+
 
     def cadastrarDespesa(self):
         pass

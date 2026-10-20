@@ -64,7 +64,7 @@ def editar(self, id_categoria, alteracoes):
     dados_atuais = self.categorias[id_categoria].copy()
     dados_atuais.update(alteracoes)
 
-    # Reconstruir o objeto para reaproveitar as validações
+    
     dados_atuais["id"] = int(id_categoria)
 
     if isinstance(dados_atuais["tipo"], str):
@@ -74,7 +74,7 @@ def editar(self, id_categoria, alteracoes):
 
     categoria_atualizada = Categoria.from_dict(dados_atuais)
 
-    # Verificar duplicidade, ignorando a própria categoria
+   
     for outro_id, dados in self.categorias.items():
         mesmo_nome = (
             dados["nome"].strip().casefold()
