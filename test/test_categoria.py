@@ -1,4 +1,5 @@
 from src.domain.categoria import Categoria, TipoCategoria
+from src.repositories.categoria_repository import Categoria_Repositorio
 
 
 categoria1 = Categoria(
@@ -28,3 +29,8 @@ assert nova_categoria.descricao == categoria1.descricao
 assert nova_categoria.limite == categoria1.limite
 
 print("Teste de conversão concluído!")
+
+repositorio = Categoria_Repositorio()
+dados_carregados = repositorio.carregar()
+
+print("Dados carregados:", dados_carregados)
