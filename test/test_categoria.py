@@ -1,62 +1,107 @@
+import pytest
+
 from src.domain.categoria import Categoria, TipoCategoria
 from src.repositories.categoria_repository import Categoria_Repositorio
 
 
-categoria1 = Categoria(
-    nome="Alimentação",
-    tipo=TipoCategoria.DESPESA,
-    descricao="Gastos com mercado",
-    limite=800
-)
+def criar_repositorio(tmp_path):
+    repositorio = Categoria_Repositorio()
+    repositorio.caminho = tmp_path / "categorias.json"
+    repositorio.categorias = {}
+    repositorio.salvar()
+    return repositorio
 
 
-dados = categoria1.to_dict()
-print("Dicionário:", dados)
+def test_adicionar_categoria(tmp_path):
+    repositorio = criar_repositorio(tmp_path)
 
+    categoria = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.DESPESA,
+        descricao="Gastos com mercado",
+        limite=800
+    )
 
-nova_categoria = Categoria.from_dict(dados)
+    repositorio.adicionar(categoria)
 
+    assert categoria.id == 1
+    assert "1" in repositorio.categorias
+    assert repositorio.categorias["1"]["nome"] == "Alimentação"
 
-print("Nome:", nova_categoria.nome)
-print("Tipo:", nova_categoria.tipo)
-print("Descrição:", nova_categoria.descricao)
-print("Limite:", nova_categoria.limite)
-print("ID:", nova_categoria.id)
+def test_impedir_categoria_duplicada(tmp_path):
+    repositorio = criar_repositorio(tmp_path)
 
-assert nova_categoria.nome == categoria1.nome
-assert nova_categoria.tipo == categoria1.tipo
-assert nova_categoria.descricao == categoria1.descricao
-assert nova_categoria.limite == categoria1.limite
+    categoria1 = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.DESPESA,
+        descricao="Gastos com mercado",
+        limite=800
+    )
 
-print("Teste de conversão concluído!")
+    categoria2 = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.DESPESA,
+        descricao="Compras de supermercado",
+        limite=1000
+    )
 
-repositorio = Categoria_Repositorio()
-dados_carregados = repositorio.carregar()
-
-print("Dados carregados:", dados_carregados)
-
-repositorio = Categoria_Repositorio()
-
-try:
     repositorio.adicionar(categoria1)
-except ValueError as erro:
-    print("Duplicidade bloqueada:", erro)
 
-print("ID atribuído:", categoria1.id)
-print("Dados no repositório:", repositorio.categorias)
+    with pytest.raises(
+    ValueError,
+    match="Já existe uma categoria com esse nome e tipo"
+):
+        repositorio.adicionar(categoria2)
 
-repositorio2 = Categoria_Repositorio()
+def test_permitir_mesmo_nome_tipo_diferente(tmp_path):
+    repositorio = criar_repositorio(tmp_path)
 
-print("Dados recuperados do JSON:", repositorio2.categorias)
+    categoria_despesa = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.DESPESA,
+        descricao="Gastos com mercado",
+        limite=800
+    )
 
-print("\n--- Teste de mesmo nome, tipo diferente ---")
+    categoria_receita = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.RECEITA,
+        descricao="Receitas relacionadas à alimentação"
+    )
 
-categoria_receita = Categoria(
-    nome="Alimentação",
-    tipo=TipoCategoria.RECEITA,
-    descricao="Receita relacionada à alimentação"
-)
+    repositorio.adicionar(categoria_despesa)
+    repositorio.adicionar(categoria_receita)
 
-repositorio.adicionar(categoria_receita)
+    assert len(repositorio.categorias) == 2
+    assert categoria_despesa.id != categoria_receita.id
 
-print("Categoria cadastrada com ID:", categoria_receita.id)
+def test_editar_categoria(tmp_path):
+    repositorio = criar_repositorio(tmp_path)
+
+    categoria = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.DESPESA,
+        descricao="Gastos com mercado",
+        limite=800
+    )
+
+    repositorio.adicionar(categoria)
+
+    repositorio.editar(
+        categoria.id,
+        {"nome": "Supermercado"}
+    )
+
+    assert repositorio.categorias["1"]["nome"] == "Supermercado"
+
+def test_editar_categoria_inexistente(tmp_path):
+    repositorio = criar_repositorio(tmp_path)
+
+    with pytest.raises(
+    ValueError,
+    match="Categoria não encontrada"
+):
+        repositorio.editar(
+        99,
+        {"nome": "Supermercado"}
+        )
