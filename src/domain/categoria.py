@@ -87,11 +87,4 @@ class Categoria:
         
     
 
-    def criar(self):
-        pass
-
-    def editar(self):
-        pass
-
-    def excluir(self):
-        pass
+    

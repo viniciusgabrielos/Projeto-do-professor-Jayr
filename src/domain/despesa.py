@@ -1,4 +1,6 @@
 from src.domain.lancamento import Lancamento
+from src.domain.categoria import TipoCategoria
+from src.domain.categoria import Categoria
 
 class Despesa(Lancamento):
     """
@@ -14,18 +16,17 @@ class Despesa(Lancamento):
     """
    
     def __init__(
-        self, valor, categoria, data, descricao, forma_de_pagamento
+        self, valor, categoria, data, descricao, forma_de_pagamento, id = None
     ):
-        super().__init__(
-            valor, categoria, data, descricao, forma_de_pagamento
-        )
+        if not isinstance(categoria, Categoria):
+            raise ValueError("O lançamento deve possuir uma categoria")
 
+        if categoria.tipo != TipoCategoria.DESPESA:
+            raise ValueError("Uma despesa precisa de uma categoria do tipo DESPESA"
+    )
 
-    def cadastrarDespesa(self):
-        pass
-        
+        super().__init__(valor, categoria, data, descricao, forma_de_pagamento, id
+)
 
-    def editarDespesa(self):
-        pass
 
     

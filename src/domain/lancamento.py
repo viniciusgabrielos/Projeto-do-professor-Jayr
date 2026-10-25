@@ -14,12 +14,13 @@ class Lancamento:
     """
    
 
-    def __init__(self, valor, categoria, data, descricao, forma_de_pagamento):
+    def __init__(self, valor, categoria, data, descricao, forma_de_pagamento,id = None):
         self.valor = valor
         self.categoria = categoria
         self.data = data
         self.descricao = descricao
         self.forma_de_pagamento = forma_de_pagamento
+        self.id = id
 
  
 
@@ -84,11 +85,24 @@ class Lancamento:
             f"Forma de pagamento: {self.forma_de_pagamento}"
         )
 
-    def cadastrar(self):
-        pass
+    def to_dict(self):
+            return {
+                "valor": self.valor,
+                "categoria": self.categoria.to_dict(),
+                "data": self.data.isoformat(),
+                "descricao": self.descricao,
+                "forma_de_pagamento": self.forma_de_pagamento,
+                "id": self.id,
+            }
+    @classmethod
+    def from_dict(cls, dados):
+        categoria = Categoria.from_dict(dados["categoria"])
 
-    def editar(self):
-        pass
-
-    def excluir(self):
-        pass
+        return cls(
+            valor=dados["valor"],
+            categoria=categoria,
+            data=date.fromisoformat(dados["data"]),
+            descricao=dados["descricao"],
+            forma_de_pagamento=dados["forma_de_pagamento"],
+            id=dados["id"],
+    )
