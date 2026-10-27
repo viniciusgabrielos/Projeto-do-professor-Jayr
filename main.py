@@ -1,9 +1,12 @@
+
 from src.repositories.categoria_repository import Categoria_Repositorio
 import argparse
 from datetime import datetime
 from src.domain.despesa import Despesa
 from src.repositories.despesa_repository import Despesa_Repositorio
 from src.domain.categoria import Categoria
+from src.domain.receita import Receita
+from src.repositories.receita_repository import Receita_Repositorio
 
 
 def main():
@@ -19,16 +22,16 @@ def main():
 
     subparsers.add_parser("adicionar-despesa")
     subparsers.add_parser("listar-categorias")
+    subparsers.add_parser("adicionar-receita")
     subparsers.add_parser("relatorio-mensal")
 
     argumentos = parser.parse_args()
 
     if argumentos.comando == "adicionar-despesa":
-        print("---Cadastro de Despesa---")
-        while True:
-            
-            try:
+        print("--- Cadastro de Despesa ---")
 
+        while True:
+            try:
                 valor = float(input("Valor da despesa: R$ "))
 
                 if valor > 0:
@@ -38,38 +41,57 @@ def main():
 
             except ValueError:
                 print("Valor inválido! Digite um número válido.")
-       
+
         repositorio_categorias = Categoria_Repositorio()
         categorias = repositorio_categorias.listar()
+
+        tem_categoria_despesa = False
+
+        for dados in categorias.values():
+            if dados["tipo"] == "DESPESA":
+                tem_categoria_despesa = True
+                break
+
+        if not tem_categoria_despesa:
+            print("Nenhuma categoria de despesa cadastrada.")
+            return
 
         print("\nCategorias disponíveis para despesas:")
 
         for id_cat, dados in categorias.items():
             if dados["tipo"] == "DESPESA":
                 print(
-                f"ID: {id_cat} | "
-                f"Nome: {dados['nome']} | "
-                f"Limite: R$ {dados['limite']:.2f}" )
+                    f"ID: {id_cat} | "
+                    f"Nome: {dados['nome']} | "
+                    f"Limite: R$ {dados['limite']:.2f}"
+                )
 
-        id_categoria = input("\nID da categoria: ")
+        while True:
+            id_categoria = input("\nID da categoria: ")
 
-        if id_categoria not in categorias:
-            raise ValueError("Categoria não encontrada")
+            if (
+                id_categoria in categorias
+                and categorias[id_categoria]["tipo"] == "DESPESA"
+            ):
+                break
+
+            print(
+                "ID inválido ou categoria não encontrada. "
+                "Tente novamente."
+            )
 
         dados_categoria = categorias[id_categoria]
 
-        if dados_categoria["tipo"] != "DESPESA":
-            raise ValueError("A categoria selecionada não é do tipo DESPESA")
-
         categoria = Categoria.from_dict({
-        **dados_categoria,
-        "id": int(id_categoria)
-})
+            **dados_categoria,
+            "id": int(id_categoria)
+        })
+
         while True:
             try:
                 data_despesa = datetime.strptime(
-            input("Data da despesa (DD-MM-AAAA): "),
-            "%d-%m-%Y"
+                    input("Data da despesa (DD-MM-AAAA): "),
+                    "%d-%m-%Y"
                 ).date()
 
                 break
@@ -77,25 +99,131 @@ def main():
             except ValueError:
                 print("Data inválida! Digite no formato DD-MM-AAAA.")
 
-        
         descricao = input("Descrição da despesa: ").strip()
 
-           
         while True:
             forma_de_pagamento = input("Forma de pagamento: ").strip()
 
             if forma_de_pagamento:
                 break
 
-            print("A forma de pagamento não pode ser vazia. Tente novamente.")
+            print(
+                "A forma de pagamento não pode ser vazia. "
+                "Tente novamente."
+            )
 
-        despesa = Despesa(valor=valor,categoria=categoria,data=data_despesa,descricao=descricao,forma_de_pagamento=forma_de_pagamento)
+        despesa = Despesa(
+            valor=valor,
+            categoria=categoria,
+            data=data_despesa,
+            descricao=descricao,
+            forma_de_pagamento=forma_de_pagamento
+        )
+
         repositorio_despesas = Despesa_Repositorio()
         repositorio_despesas.adicionar_despesa(despesa)
 
         print("Despesa cadastrada com sucesso!")
-        print("Id da despesa:", despesa.id)
-  
+        print("ID da despesa:", despesa.id)
+
+    elif argumentos.comando == "adicionar-receita":
+        print("--- Cadastro de Receita ---")
+
+        while True:
+            try:
+                valor = float(input("Valor da receita: R$ "))
+
+                if valor > 0:
+                    break
+
+                print("O valor deve ser maior que 0. Tente novamente.")
+
+            except ValueError:
+                print("Valor inválido! Digite um número válido.")
+
+        repositorio_categorias = Categoria_Repositorio()
+        categorias = repositorio_categorias.listar()
+
+        tem_categoria_receita = False
+
+        for dados in categorias.values():
+            if dados["tipo"] == "RECEITA":
+                tem_categoria_receita = True
+                break
+
+        if not tem_categoria_receita:
+            print("Nenhuma categoria de receita cadastrada.")
+            return
+
+        print("\nCategorias disponíveis para receitas:")
+
+        for id_cat, dados in categorias.items():
+            if dados["tipo"] == "RECEITA":
+                print(
+                    f"ID: {id_cat} | "
+                    f"Nome: {dados['nome']}"
+                )
+
+        while True:
+            id_categoria = input("\nID da categoria: ")
+
+            if (
+                id_categoria in categorias
+                and categorias[id_categoria]["tipo"] == "RECEITA"
+            ):
+                break
+
+            print(
+                "ID inválido ou categoria não encontrada. "
+                "Tente novamente."
+            )
+
+        dados_categoria = categorias[id_categoria]
+
+        categoria = Categoria.from_dict({
+            **dados_categoria,
+            "id": int(id_categoria)
+        })
+
+        while True:
+            try:
+                data_receita = datetime.strptime(
+                    input("Data da receita (DD-MM-AAAA): "),
+                    "%d-%m-%Y"
+                ).date()
+
+                break
+
+            except ValueError:
+                print("Data inválida! Digite no formato DD-MM-AAAA.")
+
+        descricao = input("Descrição da receita: ").strip()
+
+        while True:
+            forma_de_pagamento = input("Forma de pagamento: ").strip()
+
+            if forma_de_pagamento:
+                break
+
+            print(
+                "A forma de pagamento não pode ser vazia. "
+                "Tente novamente."
+            )
+
+        receita = Receita(
+            valor=valor,
+            categoria=categoria,
+            data=data_receita,
+            descricao=descricao,
+            forma_de_pagamento=forma_de_pagamento
+        )
+
+        repositorio_receitas = Receita_Repositorio()
+        repositorio_receitas.adicionar_receita(receita)
+
+        print("Receita cadastrada com sucesso!")
+        print("ID da receita:", receita.id)
+
     elif argumentos.comando == "listar-categorias":
         repositorio = Categoria_Repositorio()
         categorias = repositorio.listar()
@@ -105,13 +233,17 @@ def main():
         else:
             for id_categoria, dados in categorias.items():
                 print(
-                f"ID: {id_categoria} | "
-                f"Nome: {dados['nome']} | "
-                f"Tipo: {dados['tipo']} | "
-                f"Limite: {dados['limite']}"
-            )
+                    f"ID: {id_categoria} | "
+                    f"Nome: {dados['nome']} | "
+                    f"Tipo: {dados['tipo']} | "
+                    f"Limite: {dados['limite']}"
+                )
+
     else:
-        print(f"Comando '{argumentos.comando}' ainda não implementado.")
+        print(
+            f"Comando '{argumentos.comando}' "
+            "ainda não implementado."
+        )
 
 
 if __name__ == "__main__":
