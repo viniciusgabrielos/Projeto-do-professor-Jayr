@@ -71,10 +71,7 @@ class Lancamento:
 
     @descricao.setter
     def descricao(self, descricao_cadastrada):
-        if descricao_cadastrada is not None and descricao_cadastrada.strip() != "":
-            self.__descricao = descricao_cadastrada
-        else:
-            raise ValueError("A descrição deve ser informada")
+        self.__descricao = descricao_cadastrada
 
     def __str__(self):
         return(

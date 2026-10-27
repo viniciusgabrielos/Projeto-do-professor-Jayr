@@ -5,13 +5,8 @@
         "descricao": "Gastos com mercado",
         "limite": 800
     },
+    
     "2": {
-        "nome": "Alimentação",
-        "tipo": "DESPESA",
-        "descricao": "Gastos com mercado",
-        "limite": 800
-    },
-    "3": {
         "nome": "Alimentação",
         "tipo": "RECEITA",
         "descricao": "Receita relacionada à alimentação",
