@@ -1,0 +1,15 @@
+{
+    "1": {
+        "valor": 1500.0,
+        "categoria": {
+            "nome": "Alimentação",
+            "tipo": "RECEITA",
+            "descricao": "Receita relacionada à alimentação",
+            "limite": null,
+            "id": 2
+        },
+        "data": "2025-11-14",
+        "descricao": "Valor ganho vendendo produtos alimentícios",
+        "forma_de_pagamento": "PIX"
+    }
+}
