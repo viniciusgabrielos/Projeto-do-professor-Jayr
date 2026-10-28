@@ -5,11 +5,52 @@
         "descricao": "Gastos com mercado",
         "limite": 800
     },
-    
-    "2": {
-        "nome": "Alimentação",
+    "3": {
+        "nome": "Moradia",
+        "tipo": "DESPESA",
+        "descricao": "Aluguel, água, energia e manutenção",
+        "limite": 1200
+    },
+    "4": {
+        "nome": "Transporte",
+        "tipo": "DESPESA",
+        "descricao": "Combustível e transporte público",
+        "limite": 400
+    },
+    "5": {
+        "nome": "Saúde",
+        "tipo": "DESPESA",
+        "descricao": "Medicamentos e consultas",
+        "limite": 300
+    },
+    "6": {
+        "nome": "Educação",
+        "tipo": "DESPESA",
+        "descricao": "Cursos, livros e materiais",
+        "limite": 350
+    },
+    "7": {
+        "nome": "Salário",
         "tipo": "RECEITA",
-        "descricao": "Receita relacionada à alimentação",
+        "descricao": "Renda proveniente de trabalho",
         "limite": null
+    },
+    "8": {
+        "nome": "Serviços",
+        "tipo": "RECEITA",
+        "descricao": "Renda obtida com prestação de serviços",
+        "limite": null
+    },
+    "9": {
+        "nome": "Vendas",
+        "tipo": "RECEITA",
+        "descricao": "Renda obtida com venda de produtos",
+        "limite": null
+    },
+    "10": {
+        "nome": "Lazer",
+        "tipo": "DESPESA",
+        "descricao": "Passeios, jogos e entretenimento",
+        "limite": 250
     }
 }

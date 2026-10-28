@@ -1,15 +1,68 @@
+
 {
-    "1": {
-        "valor": 1500.0,
+    "2": {
+        "valor": 3500.0,
         "categoria": {
-            "nome": "Alimentação",
+            "nome": "Salário",
             "tipo": "RECEITA",
-            "descricao": "Receita relacionada à alimentação",
+            "descricao": "Renda proveniente de trabalho",
             "limite": null,
-            "id": 2
+            "id": 7
         },
-        "data": "2025-11-14",
-        "descricao": "Valor ganho vendendo produtos alimentícios",
+        "data": "2026-10-05",
+        "descricao": "Salário mensal",
         "forma_de_pagamento": "PIX"
+    },
+    "3": {
+        "valor": 800.0,
+        "categoria": {
+            "nome": "Serviços",
+            "tipo": "RECEITA",
+            "descricao": "Renda obtida com prestação de serviços",
+            "limite": null,
+            "id": 8
+        },
+        "data": "2026-10-18",
+        "descricao": "Pagamento por aulas particulares",
+        "forma_de_pagamento": "PIX"
+    },
+    "4": {
+        "valor": 450.0,
+        "categoria": {
+            "nome": "Vendas",
+            "tipo": "RECEITA",
+            "descricao": "Renda obtida com venda de produtos",
+            "limite": null,
+            "id": 9
+        },
+        "data": "2026-09-12",
+        "descricao": "Venda de produtos",
+        "forma_de_pagamento": "Dinheiro"
+    },
+    "5": {
+        "valor": 250.0,
+        "categoria": {
+            "nome": "Serviços",
+            "tipo": "RECEITA",
+            "descricao": "Renda obtida com prestação de serviços",
+            "limite": null,
+            "id": 8
+        },
+        "data": "2026-10-25",
+        "descricao": "Serviço adicional",
+        "forma_de_pagamento": "Transferência"
+    },
+    "6": {
+        "valor": 120.0,
+        "categoria": {
+            "nome": "Vendas",
+            "tipo": "RECEITA",
+            "descricao": "Renda obtida com venda de produtos",
+            "limite": null,
+            "id": 9
+        },
+        "data": "2026-08-14",
+        "descricao": "Venda de produtos usados",
+        "forma_de_pagamento": "Dinheiro"
     }
 }
