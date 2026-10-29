@@ -3,8 +3,9 @@ import json
 
 
 class Despesa_Repositorio:
-    def __init__(self):
+    def __init__(self,categoria_repositorio):
         self.caminho = Path("data/despesas.json")
+        self.categoria_repositorio = categoria_repositorio
         self.despesas = self.carregar()
 
     def carregar(self):

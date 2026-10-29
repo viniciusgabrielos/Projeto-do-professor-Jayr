@@ -120,7 +120,7 @@ def main():
             forma_de_pagamento=forma_de_pagamento
         )
 
-        repositorio_despesas = Despesa_Repositorio()
+        repositorio_despesas = Despesa_Repositorio(repositorio_categorias)
         repositorio_despesas.adicionar_despesa(despesa)
 
         print("Despesa cadastrada com sucesso!")
@@ -218,7 +218,7 @@ def main():
             forma_de_pagamento=forma_de_pagamento
         )
 
-        repositorio_receitas = Receita_Repositorio()
+        repositorio_receitas = Receita_Repositorio(repositorio_categorias)
         repositorio_receitas.adicionar_receita(receita)
 
         print("Receita cadastrada com sucesso!")

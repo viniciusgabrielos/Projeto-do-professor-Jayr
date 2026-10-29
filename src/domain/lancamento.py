@@ -85,7 +85,7 @@ class Lancamento:
     def to_dict(self):
             return {
                 "valor": self.valor,
-                "categoria": self.categoria.to_dict(),
+                "categoria_id": self.categoria.id,
                 "data": self.data.isoformat(),
                 "descricao": self.descricao,
                 "forma_de_pagamento": self.forma_de_pagamento,

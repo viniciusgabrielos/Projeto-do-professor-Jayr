@@ -1,17 +1,27 @@
 
+
 from src.domain.orcamento_mensal import OrcamentoMensal
+from src.repositories.categoria_repository import Categoria_Repositorio
 from src.repositories.receita_repository import Receita_Repositorio
 from src.repositories.despesa_repository import Despesa_Repositorio
 
 
 def criar_orcamento(mes=10, ano=2026):
+    categoria_repositorio = Categoria_Repositorio()
+
+    receita_repositorio = Receita_Repositorio(
+        categoria_repositorio
+    )
+    despesa_repositorio = Despesa_Repositorio(
+        categoria_repositorio
+    )
+
     return OrcamentoMensal(
         mes=mes,
         ano=ano,
-        receita_repositorio=Receita_Repositorio(),
-        despesa_repositorio=Despesa_Repositorio(),
+        receita_repositorio=receita_repositorio,
+        despesa_repositorio=despesa_repositorio,
     )
-
 
 def test_calcular_receitas_outubro():
     orcamento = criar_orcamento()

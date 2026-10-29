@@ -1,11 +1,13 @@
 
 from pathlib import Path
 import json
-
+from src.repositories.categoria_repository import Categoria_Repositorio
+from src.domain.receita import Receita
 
 class Receita_Repositorio:
-    def __init__(self):
+    def __init__(self,categoria_repositorio):
         self.caminho = Path("data/receitas.json")
+        self.categoria_repositorio = categoria_repositorio
         self.receitas = self.carregar()
 
     def carregar(self):
@@ -14,6 +16,19 @@ class Receita_Repositorio:
                 return json.load(arquivo)
         else:
             return {}
+
+    def _converter_para_receita(self, id_receita, dados):
+        dados_receita = dados.copy()
+
+        id_categoria = dados_receita.pop("categoria_id")
+        categoria = self.categoria_repositorio.buscar_por_id(
+        id_categoria
+    )
+
+        dados_receita["categoria"] = categoria.to_dict()
+        dados_receita["id"] = int(id_receita)
+
+        return Receita.from_dict(dados_receita)
 
     def salvar(self):
         with self.caminho.open("w", encoding="utf-8") as arquivo:

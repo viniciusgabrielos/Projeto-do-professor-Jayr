@@ -70,6 +70,17 @@ class Categoria_Repositorio:
     def listar(self):
         return self.categorias
 
+    def buscar_por_id(self, id_categoria):
+        id_categoria = str(id_categoria)
+
+        if id_categoria not in self.categorias:
+            raise ValueError("Categoria não encontrada")
+
+        dados = self.categorias[id_categoria].copy()
+        dados["id"] = int(id_categoria)
+
+        return Categoria.from_dict(dados)
+
     def editar(self, id_categoria, alteracoes):
         id_categoria = str(id_categoria)
 
