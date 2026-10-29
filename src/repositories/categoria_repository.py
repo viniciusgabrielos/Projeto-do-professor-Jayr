@@ -25,17 +25,26 @@ class Categoria_Repositorio:
                 ensure_ascii=False,
                 indent=4
             )
+    def _existe_categoria_equivalente(self, categoria, id_categoria_a_ignorar=None
+    ):
+        for chave, dados in self.categorias.items():
+            if (id_categoria_a_ignorar is not None and chave == str(id_categoria_a_ignorar)):
+                continue
+    
+            dados_categoria = dados.copy()
+            dados_categoria["id"] = int(chave)
+    
+            categoria_existente = Categoria.from_dict(dados_categoria)
+    
+            if categoria == categoria_existente:
+                return True
+        return False
+    
 
     def adicionar(self, categoria):
-        for chave, dados in self.categorias.items():
-            if (
-                dados["nome"].strip().casefold()
-                == categoria.nome.strip().casefold()
-                and dados["tipo"] == categoria.tipo.value
-            ):
-                raise ValueError(
-                    "Já existe uma categoria com esse nome e tipo"
-                )
+        if self._existe_categoria_equivalente(categoria):
+            raise ValueError("Já existe uma categoria com esse nome e tipo"
+        )
 
         if not self.categorias:
             novo_id = 1
@@ -57,7 +66,7 @@ class Categoria_Repositorio:
         self.categorias[str(novo_id)] = dados
 
         self.salvar()
-
+    
     def listar(self):
         return self.categorias
 
@@ -90,24 +99,10 @@ class Categoria_Repositorio:
 
         categoria_atualizada = Categoria.from_dict(dados_atuais)
 
-        for outro_id, dados in self.categorias.items():
-            mesmo_nome = (
-                dados["nome"].strip().casefold()
-                == categoria_atualizada.nome.strip().casefold()
-            )
-
-            mesmo_tipo = (
-                dados["tipo"] == categoria_atualizada.tipo.value
-            )
-
-            if (
-                outro_id != id_categoria
-                and mesmo_nome
-                and mesmo_tipo
-            ):
-                raise ValueError(
-                    "Já existe uma categoria com esse nome e tipo"
-                )
+        
+        if self._existe_categoria_equivalente(categoria_atualizada,id_categoria_a_ignorar=id_categoria):raise ValueError(
+        "Já existe uma categoria com esse nome e tipo"
+    )
 
         dados = categoria_atualizada.to_dict()
         dados.pop("id")

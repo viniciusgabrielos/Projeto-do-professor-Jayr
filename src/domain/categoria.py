@@ -85,6 +85,17 @@ class Categoria:
 
         )
         
-    
+    def __eq__(self, outra):
+        if not isinstance(outra, Categoria):
+            return NotImplemented
+
+        mesmo_nome = (
+            self.nome.strip().casefold()
+            == outra.nome.strip().casefold()
+        )
+
+        mesmo_tipo =  (self.tipo == outra.tipo)
+
+        return mesmo_nome and mesmo_tipo
 
     
