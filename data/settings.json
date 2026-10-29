@@ -1,0 +1,5 @@
+{
+    "limite_alerta_alto_valor": 500.0,
+    "meses_comparacao": 3,
+    "meta_economia_mensal": 10.0
+}
