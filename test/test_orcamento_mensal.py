@@ -21,6 +21,7 @@ def criar_orcamento(mes=10, ano=2026):
         ano=ano,
         receita_repositorio=receita_repositorio,
         despesa_repositorio=despesa_repositorio,
+        receita_prevista=0
     )
 
 def test_calcular_receitas_outubro():

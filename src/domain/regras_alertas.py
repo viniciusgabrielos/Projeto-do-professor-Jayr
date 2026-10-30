@@ -4,6 +4,7 @@ from src.domain.settings import carregar_configuracoes
 from datetime import date
 from datetime import date
 from src.domain.alerta import Alerta, TipoAlerta
+from src.domain.orcamento_mensal import OrcamentoMensal
 
 
 def verificar_alerta_alto_valor(despesa, repositorio_alertas):

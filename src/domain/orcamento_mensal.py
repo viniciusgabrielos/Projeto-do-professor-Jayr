@@ -12,8 +12,8 @@ class OrcamentoMensal:
     déficits no orçamento.
     """
    
-    def __init__(self, mes, ano, receita_repositorio, despesa_repositorio,receita_prevista):
-
+    def __init__(self,mes,ano,receita_repositorio,despesa_repositorio,receita_prevista
+):
         if type(mes) != int:
             raise ValueError("O mês deve ser um inteiro")
 
