@@ -17,6 +17,7 @@ from src.domain.regras_alertas import (
 )
 from src.domain.orcamento_mensal import OrcamentoMensal
 from src.repositories.orcamento_repository import Orcamento_Repositorio
+from src.domain.saldo_atual import SaldoAtual
 
 
 
@@ -39,6 +40,7 @@ def main():
     parser_orcamento.add_argument("mes", type=int)
     parser_orcamento.add_argument("ano", type=int)
     parser_orcamento.add_argument("receita_prevista", type=float)
+    subparsers.add_parser("consultar-saldo")
 
     subparsers.add_parser("fechar-mes")
     subparsers.add_parser("relatorio-mensal")
@@ -283,7 +285,28 @@ def main():
 
         except ValueError as erro:
             print(f"Erro: {erro}")
-        
+
+
+    elif argumentos.comando == "consultar-saldo":
+        repositorio_categorias = Categoria_Repositorio()
+
+        repositorio_receitas = Receita_Repositorio(
+        repositorio_categorias
+    )
+
+        repositorio_despesas = Despesa_Repositorio(
+        repositorio_categorias
+    )
+
+        saldo = SaldoAtual(
+        repositorio_receitas,
+        repositorio_despesas
+    )
+
+        resultado = saldo.calcular_saldo()
+
+        print("\n--- Saldo Financeiro ---")
+        print(f"Saldo atual: R$ {resultado:.2f}")   
     elif argumentos.comando == "fechar-mes":
         print("--- Fechamento Mensal ---")
 
