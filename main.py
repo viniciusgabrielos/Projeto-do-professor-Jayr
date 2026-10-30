@@ -325,9 +325,9 @@ def main():
 
         if dados_orcamento is None:
             print("\n[ERRO] Não existe orçamento cadastrado para este mês.")
-
-        else:
-            receita_prevista = dados_orcamento["receita_prevista"]
+            return
+       
+        receita_prevista = dados_orcamento["receita_prevista"]
 
         orcamento = OrcamentoMensal(
             mes=data_referencia.month,
