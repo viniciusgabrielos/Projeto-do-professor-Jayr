@@ -3,8 +3,12 @@ from pathlib import Path
 
 
 class Alerta_Repositorio:
-    def __init__(self):
-        self.caminho = Path("data/alertas.json")
+    def __init__(self, caminho=None):
+        if caminho is None:
+            self.caminho = Path("data/alertas.json")
+        else:
+            self.caminho = Path(caminho)
+
         self.alertas = self.carregar()
 
     def carregar(self):

@@ -48,8 +48,7 @@ def test_alerta_rejeita_data_invalida():
 
 
 def test_adicionar_alerta_salva_no_json(tmp_path):
-    repositorio = Alerta_Repositorio()
-    repositorio.caminho = tmp_path / "alertas.json"
+    repositorio = Alerta_Repositorio(tmp_path / "alertas.json")
 
     alerta = Alerta(
         tipo=TipoAlerta.ALTO_VALOR,
@@ -69,8 +68,7 @@ def test_adicionar_alerta_salva_no_json(tmp_path):
 
 
 def test_adicionar_varios_alertas_gera_ids_sequenciais(tmp_path):
-    repositorio = Alerta_Repositorio()
-    repositorio.caminho = tmp_path / "alertas.json"
+    repositorio = Alerta_Repositorio(tmp_path / "alertas.json")
 
     primeiro = Alerta(
         tipo=TipoAlerta.ALTO_VALOR,
@@ -88,8 +86,7 @@ def test_adicionar_varios_alertas_gera_ids_sequenciais(tmp_path):
 
 
 def test_listar_alertas_retorna_os_alertas_salvos(tmp_path):
-    repositorio = Alerta_Repositorio()
-    repositorio.caminho = tmp_path / "alertas.json"
+    repositorio = Alerta_Repositorio(tmp_path / "alertas.json")
 
     alerta = Alerta(
         tipo=TipoAlerta.DEFICIT_ORCAMENTARIO,
