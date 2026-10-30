@@ -1,3 +1,4 @@
+from src.domain.settings import carregar_configuracoes
 class OrcamentoMensal:
     """
     Representa o planejamento financeiro de um determinado mês.
@@ -11,7 +12,7 @@ class OrcamentoMensal:
     déficits no orçamento.
     """
    
-    def __init__(self, mes, ano, receita_repositorio, despesa_repositorio):
+    def __init__(self, mes, ano, receita_repositorio, despesa_repositorio,receita_prevista):
 
         if type(mes) != int:
             raise ValueError("O mês deve ser um inteiro")
@@ -30,6 +31,7 @@ class OrcamentoMensal:
         self.ano = ano
         self.receita_repositorio = receita_repositorio
         self.despesa_repositorio = despesa_repositorio
+        self.receita_prevista = receita_prevista
 
     def calcular_receitas(self):
         """
@@ -80,3 +82,29 @@ class OrcamentoMensal:
 
     def verificar_deficit(self):
         return self.calcular_saldo()<0
+
+    def comparar_receita_prevista(self):
+        receita_realizada = self.calcular_receitas()
+
+        if receita_realizada == self.receita_prevista:
+            return "Previsão de receita acertada!"
+
+        elif receita_realizada > self.receita_prevista:
+            return "A receita realizada superou a previsão!"
+
+        else:
+            return "A receita realizada ficou abaixo da previsão."
+
+    def verificar_meta_economia(self):
+        configuracoes = carregar_configuracoes()
+        percentual = configuracoes["meta_economia_mensal"]
+
+        receita_realizada = self.calcular_receitas()
+        saldo = self.calcular_saldo()
+
+        valor_meta = receita_realizada * (percentual / 100)
+
+        if saldo >= valor_meta:
+            return True
+
+        return False

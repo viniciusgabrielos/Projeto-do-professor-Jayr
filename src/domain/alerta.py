@@ -6,7 +6,8 @@ class TipoAlerta(Enum):
     ALTO_VALOR = "alto_valor"
     LIMITE_EXCEDIDO = "limite_excedido"
     DEFICIT_ORCAMENTARIO = "deficit_orcamentario"
-
+    PREVISAO_RECEITA = "previsao_receita"
+    META_ECONOMIA = "meta_economia"
 class Alerta:
     """
     Classe responsável por representar e gerenciar os alertas gerados pelo sistema, armazenando informações como a data, o tipo e a mensagem do alerta, além de permitir seu registro e apresentação ao usuário.

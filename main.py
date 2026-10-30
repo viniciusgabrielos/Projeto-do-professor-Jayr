@@ -11,7 +11,9 @@ from src.repositories.alerta_repository import Alerta_Repositorio
 from src.domain.regras_alertas import (
     verificar_alerta_alto_valor,
     verificar_alerta_limite_excedido,
-    verificar_alerta_deficit_orcamentario
+    verificar_alerta_deficit_orcamentario,
+    verificar_alerta_previsao_receita,
+    verificar_alerta_meta_economia
 )
 
 
@@ -267,42 +269,57 @@ def main():
         print("--- Fechamento Mensal ---")
 
         repositorio_categorias = Categoria_Repositorio()
-
-        repositorio_receitas = Receita_Repositorio(repositorio_categorias
-    )
-
-        repositorio_despesas = Despesa_Repositorio(
-        repositorio_categorias
-    )
-
+        repositorio_receitas = Receita_Repositorio(repositorio_categorias)
+        repositorio_despesas = Despesa_Repositorio(repositorio_categorias)
         repositorio_alertas = Alerta_Repositorio()
 
         data_referencia = date.today()
 
-        total_receitas, total_despesas, saldo, alerta = (
-    verificar_alerta_deficit_orcamentario(
-        data_referencia,
-        repositorio_receitas,
-        repositorio_despesas,
-        repositorio_alertas
+        receita_prevista = float(input("Informe a receita prevista para o mês: R$ "))
+
+        orcamento = OrcamentoMensal(
+        mes=data_referencia.month,
+        ano=data_referencia.year,
+        receita_repositorio=repositorio_receitas,
+        despesa_repositorio=repositorio_despesas,
+        receita_prevista=receita_prevista
     )
-)
-    
+
+        total_receitas = orcamento.calcular_receitas()
+        total_despesas = orcamento.calcular_despesas()
+        saldo = orcamento.calcular_saldo()
 
         print("\n--- Resultado do Fechamento Mensal ---")
         print(f"Receitas: R$ {total_receitas:.2f}")
         print(f"Despesas: R$ {total_despesas:.2f}")
         print(f"Saldo: R$ {saldo:.2f}")
 
-        if alerta is not None:
-            print("\nALERTA:", alerta.mensagem)
+        alerta_deficit = verificar_alerta_deficit_orcamentario(
+        data_referencia,
+        repositorio_receitas,
+        repositorio_despesas,
+        repositorio_alertas
+    )
+
+        verificar_alerta_previsao_receita(orcamento, repositorio_alertas)
+        verificar_alerta_meta_economia(orcamento, repositorio_alertas)
+
+        print("\n" + orcamento.comparar_receita_prevista())
+
+        if alerta_deficit[3] is not None:
+            print("\nALERTA:", alerta_deficit[3].mensagem)
         else:
             print("\nNão houve déficit orçamentário.")
-            
+
+        print("\n" + (
+        "Meta de economia atingida!"
+        if orcamento.verificar_meta_economia()
+        else "Meta de economia não atingida."
+        ))
     else:
-            print(
-                f"Comando '{argumentos.comando}' "
-                "ainda não implementado."
+        print(
+            f"Comando '{argumentos.comando}' "
+            "ainda não implementado."
             )
 if __name__ == "__main__":
     main()

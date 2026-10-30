@@ -2,6 +2,8 @@
 from src.domain.alerta import Alerta, TipoAlerta
 from src.domain.settings import carregar_configuracoes
 from datetime import date
+from datetime import date
+from src.domain.alerta import Alerta, TipoAlerta
 
 
 def verificar_alerta_alto_valor(despesa, repositorio_alertas):
@@ -61,8 +63,7 @@ def verificar_alerta_limite_excedido(
 
 
 
-from datetime import date
-from src.domain.alerta import Alerta, TipoAlerta
+
 
 
 def verificar_alerta_deficit_orcamentario(
@@ -109,3 +110,15 @@ def verificar_alerta_deficit_orcamentario(
         alerta = None
 
     return total_receitas, total_despesas, saldo, alerta
+
+def verificar_alerta_previsao_receita(orcamento, repositorio_alertas):
+    resultado = orcamento.comparar_receita_prevista()
+
+    alerta = Alerta(
+        tipo=TipoAlerta.PREVISAO_RECEITA,
+        mensagem=resultado
+    )
+
+    repositorio_alertas.adicionar_alerta(alerta)
+
+    return alerta
