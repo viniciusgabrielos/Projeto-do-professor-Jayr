@@ -1,7 +1,7 @@
 
 from src.repositories.categoria_repository import Categoria_Repositorio
 import argparse
-from datetime import datetime
+from datetime import datetime, date
 from src.domain.despesa import Despesa
 from src.repositories.despesa_repository import Despesa_Repositorio
 from src.domain.categoria import Categoria
@@ -10,8 +10,10 @@ from src.repositories.receita_repository import Receita_Repositorio
 from src.repositories.alerta_repository import Alerta_Repositorio
 from src.domain.regras_alertas import (
     verificar_alerta_alto_valor,
-    verificar_alerta_limite_excedido
+    verificar_alerta_limite_excedido,
+    verificar_alerta_deficit_orcamentario
 )
+
 
 
 def main():
@@ -28,7 +30,10 @@ def main():
     subparsers.add_parser("adicionar-despesa")
     subparsers.add_parser("listar-categorias")
     subparsers.add_parser("adicionar-receita")
+    subparsers.add_parser("fechar-mes")
     subparsers.add_parser("relatorio-mensal")
+    
+    
 
     argumentos = parser.parse_args()
 
@@ -257,12 +262,47 @@ def main():
                     f"Limite: {dados['limite']}"
                 )
 
+
+    elif argumentos.comando == "fechar-mes":
+        print("--- Fechamento Mensal ---")
+
+        repositorio_categorias = Categoria_Repositorio()
+
+        repositorio_receitas = Receita_Repositorio(repositorio_categorias
+    )
+
+        repositorio_despesas = Despesa_Repositorio(
+        repositorio_categorias
+    )
+
+        repositorio_alertas = Alerta_Repositorio()
+
+        data_referencia = date.today()
+
+        total_receitas, total_despesas, saldo, alerta = (
+    verificar_alerta_deficit_orcamentario(
+        data_referencia,
+        repositorio_receitas,
+        repositorio_despesas,
+        repositorio_alertas
+    )
+)
+    
+
+        print("\n--- Resultado do Fechamento Mensal ---")
+        print(f"Receitas: R$ {total_receitas:.2f}")
+        print(f"Despesas: R$ {total_despesas:.2f}")
+        print(f"Saldo: R$ {saldo:.2f}")
+
+        if alerta is not None:
+            print("\nALERTA:", alerta.mensagem)
+        else:
+            print("\nNão houve déficit orçamentário.")
+            
     else:
-        print(
-            f"Comando '{argumentos.comando}' "
-            "ainda não implementado."
-        )
-
-
+            print(
+                f"Comando '{argumentos.comando}' "
+                "ainda não implementado."
+            )
 if __name__ == "__main__":
     main()

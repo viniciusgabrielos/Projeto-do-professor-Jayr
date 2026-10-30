@@ -57,3 +57,55 @@ def verificar_alerta_limite_excedido(
         return alerta
 
     return None
+
+
+
+
+from datetime import date
+from src.domain.alerta import Alerta, TipoAlerta
+
+
+def verificar_alerta_deficit_orcamentario(
+    data_referencia,
+    repositorio_receitas,
+    repositorio_despesas,
+    repositorio_alertas
+):
+    total_receitas = 0
+    total_despesas = 0
+
+    for dados in repositorio_receitas.listar_receitas().values():
+        data_receita = date.fromisoformat(dados["data"])
+
+        if (
+            data_receita.month == data_referencia.month
+            and data_receita.year == data_referencia.year
+        ):
+            total_receitas += dados["valor"]
+
+    for dados in repositorio_despesas.listar_despesas().values():
+        data_despesa = date.fromisoformat(dados["data"])
+
+        if (
+            data_despesa.month == data_referencia.month
+            and data_despesa.year == data_referencia.year
+        ):
+            total_despesas += dados["valor"]
+
+    saldo = total_receitas - total_despesas
+
+    if saldo < 0:
+        alerta = Alerta(
+        tipo=TipoAlerta.DEFICIT_ORCAMENTARIO,
+        mensagem=(
+            f"Déficit orçamentário: despesas superaram "
+            f"receitas em R$ {abs(saldo):.2f}"
+        )
+    )
+
+        repositorio_alertas.adicionar_alerta(alerta)
+
+    else:
+        alerta = None
+
+    return total_receitas, total_despesas, saldo, alerta
