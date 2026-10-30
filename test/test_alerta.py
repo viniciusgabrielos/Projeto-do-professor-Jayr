@@ -5,6 +5,7 @@ from src.repositories.alerta_repository import Alerta_Repositorio
 import pytest
 from unittest.mock import Mock
 from src.domain.regras_alertas import verificar_alerta_alto_valor
+from src.domain.regras_alertas import verificar_alerta_limite_excedido
 
 
 
@@ -151,3 +152,106 @@ def test_despesa_acima_do_limite_gera_alerta(monkeypatch):
 
     assert resultado.tipo == TipoAlerta.ALTO_VALOR
     repositorio.adicionar_alerta.assert_called_once_with(resultado)
+
+
+
+
+def test_total_despesas_abaixo_do_limite_nao_gera_alerta():
+    
+    despesa = Mock()
+    despesa.valor = 100.0
+    despesa.data = date(2026, 10, 20)
+
+    despesa.categoria = Mock()
+    despesa.categoria.id = 2
+
+   
+    repositorio_despesas = Mock()
+
+    repositorio_despesas.listar_despesas.return_value = {
+        "1": {
+            "valor": 200.0,
+            "categoria_id": 2,
+            "data": "2026-10-05"
+        },
+        "2": {
+            "valor": 200.0,
+            "categoria_id": 2,
+            "data": "2026-10-15"
+        }
+    }
+
+
+    repositorio_despesas.categoria_repositorio.listar.return_value = {
+        "2": {
+            "nome": "Alimentação",
+            "limite": 600.0
+        }
+    }
+
+    
+    repositorio_alertas = Mock()
+
+
+    resultado = verificar_alerta_limite_excedido(
+        despesa,
+        repositorio_despesas,
+        repositorio_alertas
+    )
+
+   
+    assert resultado is None
+    repositorio_alertas.adicionar_alerta.assert_not_called()
+
+def test_total_despesas_acima_do_limite_gera_alerta():
+  
+    despesa = Mock()
+    despesa.valor = 250.0
+    despesa.data = date(2026, 10, 20)
+
+    despesa.categoria = Mock()
+    despesa.categoria.id = 2
+
+   
+    repositorio_despesas = Mock()
+
+    repositorio_despesas.listar_despesas.return_value = {
+        "1": {
+            "valor": 200.0,
+            "categoria_id": 2,
+            "data": "2026-10-05"
+        },
+        "2": {
+            "valor": 200.0,
+            "categoria_id": 2,
+            "data": "2026-10-15"
+        },
+        "3": {
+            "valor": 250.0,
+            "categoria_id": 2,
+            "data": "2026-10-20"
+}
+    }
+    
+
+ 
+    repositorio_despesas.categoria_repositorio.listar.return_value = {
+        "2": {
+            "nome": "Alimentação",
+            "limite": 600.0
+        }
+    }
+
+    
+    repositorio_alertas = Mock()
+
+    resultado = verificar_alerta_limite_excedido(
+        despesa,
+        repositorio_despesas,
+        repositorio_alertas
+    )
+
+
+    assert resultado is not None
+    assert resultado.tipo == TipoAlerta.LIMITE_EXCEDIDO
+    repositorio_alertas.adicionar_alerta.assert_called_once_with(resultado)

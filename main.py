@@ -8,7 +8,10 @@ from src.domain.categoria import Categoria
 from src.domain.receita import Receita
 from src.repositories.receita_repository import Receita_Repositorio
 from src.repositories.alerta_repository import Alerta_Repositorio
-from src.domain.regras_alertas import verificar_alerta_alto_valor
+from src.domain.regras_alertas import (
+    verificar_alerta_alto_valor,
+    verificar_alerta_limite_excedido
+)
 
 
 def main():
@@ -122,13 +125,15 @@ def main():
             forma_de_pagamento=forma_de_pagamento
         )
 
-       
         repositorio_despesas = Despesa_Repositorio(repositorio_categorias)
         repositorio_despesas.adicionar_despesa(despesa)
-
+       
         repositorio_alertas = Alerta_Repositorio()
 
         alerta = verificar_alerta_alto_valor(despesa,repositorio_alertas)
+
+        alerta_limite = verificar_alerta_limite_excedido(despesa,repositorio_despesas,repositorio_alertas
+)
 
         print("Despesa cadastrada com sucesso!")
         print("ID da despesa:", despesa.id)
@@ -136,6 +141,8 @@ def main():
         if alerta is not None:
             print("ALERTA:", alerta.mensagem)
 
+        if alerta_limite is not None:
+            print("ALERTA:", alerta_limite.mensagem)
 
     elif argumentos.comando == "adicionar-receita":
         print("--- Cadastro de Receita ---")
