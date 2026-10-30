@@ -1,17 +1,13 @@
-import json
 from pathlib import Path
+import json
 
 
 def carregar_configuracoes():
-    caminho = (
-        Path(__file__).resolve().parents[1]
-        / "data"
-        / "settings.json"
-    )
+    caminho = Path(__file__).resolve().parents[2] / "data" / "settings.json"
 
     with open(caminho, "r", encoding="utf-8") as arquivo:
-        configuracoes = json.load(arquivo)
-
+        return json.load(arquivo)
+    
     limite = configuracoes["limite_alerta_alto_valor"]
     meses = configuracoes["meses_comparacao"]
     meta = configuracoes["meta_economia_mensal"]

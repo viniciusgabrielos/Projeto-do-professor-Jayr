@@ -1,0 +1,17 @@
+{
+    "1": {
+        "tipo": "previsao_receita",
+        "mensagem": "A receita realizada superou a previsão!",
+        "data": "2026-10-30"
+    },
+    "2": {
+        "tipo": "previsao_receita",
+        "mensagem": "A receita realizada superou a previsão!",
+        "data": "2026-10-30"
+    },
+    "3": {
+        "tipo": "meta_economia",
+        "mensagem": "Meta de economia mensal atingida!",
+        "data": "2026-10-30"
+    }
+}

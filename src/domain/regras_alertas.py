@@ -1,10 +1,7 @@
+from datetime import date
 
 from src.domain.alerta import Alerta, TipoAlerta
 from src.domain.settings import carregar_configuracoes
-from datetime import date
-from datetime import date
-from src.domain.alerta import Alerta, TipoAlerta
-from src.domain.orcamento_mensal import OrcamentoMensal
 
 
 def verificar_alerta_alto_valor(despesa, repositorio_alertas):
@@ -14,15 +11,15 @@ def verificar_alerta_alto_valor(despesa, repositorio_alertas):
     if despesa.valor >= limite:
         alerta = Alerta(
             tipo=TipoAlerta.ALTO_VALOR,
-            mensagem=(
-                f"Despesa de alto valor: R$ {despesa.valor:.2f}"
-            )
+            mensagem=f"Despesa de alto valor: R$ {despesa.valor:.2f}"
         )
 
         repositorio_alertas.adicionar_alerta(alerta)
         return alerta
 
     return None
+
+
 def verificar_alerta_limite_excedido(
     despesa,
     repositorio_despesas,
@@ -62,11 +59,6 @@ def verificar_alerta_limite_excedido(
     return None
 
 
-
-
-
-
-
 def verificar_alerta_deficit_orcamentario(
     data_referencia,
     repositorio_receitas,
@@ -98,12 +90,12 @@ def verificar_alerta_deficit_orcamentario(
 
     if saldo < 0:
         alerta = Alerta(
-        tipo=TipoAlerta.DEFICIT_ORCAMENTARIO,
-        mensagem=(
-            f"Déficit orçamentário: despesas superaram "
-            f"receitas em R$ {abs(saldo):.2f}"
+            tipo=TipoAlerta.DEFICIT_ORCAMENTARIO,
+            mensagem=(
+                f"Déficit orçamentário: despesas superaram "
+                f"receitas em R$ {abs(saldo):.2f}"
+            )
         )
-    )
 
         repositorio_alertas.adicionar_alerta(alerta)
 
@@ -112,12 +104,31 @@ def verificar_alerta_deficit_orcamentario(
 
     return total_receitas, total_despesas, saldo, alerta
 
+
 def verificar_alerta_previsao_receita(orcamento, repositorio_alertas):
     resultado = orcamento.comparar_receita_prevista()
 
     alerta = Alerta(
         tipo=TipoAlerta.PREVISAO_RECEITA,
         mensagem=resultado
+    )
+
+    repositorio_alertas.adicionar_alerta(alerta)
+
+    return alerta
+
+
+def verificar_alerta_meta_economia(orcamento, repositorio_alertas):
+    meta_atingida = orcamento.verificar_meta_economia()
+
+    if meta_atingida:
+        mensagem = "Meta de economia mensal atingida!"
+    else:
+        mensagem = "Meta de economia mensal não atingida."
+
+    alerta = Alerta(
+        tipo=TipoAlerta.META_ECONOMIA,
+        mensagem=mensagem
     )
 
     repositorio_alertas.adicionar_alerta(alerta)
