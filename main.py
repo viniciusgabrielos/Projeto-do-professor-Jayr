@@ -431,7 +431,7 @@ def main():
         relatorio_financeiro.comparar_ultimos_meses()
     )
 
-        print("\n--- Receitas e Despesas dos Últimos 3 Meses ---")
+        print("\n--- Receitas e Despesas dos Últimos Meses ---")
 
         for mes, valores in comparacao.items():
             print(f"\nMês: {mes}")

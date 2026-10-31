@@ -33,10 +33,10 @@ class Categoria:
 
     @nome.setter
     def nome(self, nome_cadastrado):
-        if nome_cadastrado.strip() != "":
-            self.__nome = nome_cadastrado
-        else:
+        if not isinstance(nome_cadastrado, str) or not nome_cadastrado.strip():
             raise ValueError("O nome da categoria não pode ser vazio")
+
+        self.__nome = nome_cadastrado.strip()
 
     @property
     def tipo(self):
@@ -58,12 +58,16 @@ class Categoria:
         if self.tipo == TipoCategoria.RECEITA:
             self.__limite = None
 
-        elif limite_cadastrado is not None and limite_cadastrado > 0:
+        elif (
+        isinstance(limite_cadastrado, (int, float))
+        and not isinstance(limite_cadastrado, bool)
+        and limite_cadastrado > 0
+    ):
             self.__limite = limite_cadastrado
 
         else:
             raise ValueError("O limite da despesa deve ser maior que 0")
-         
+        
     def to_dict(self):
         return {
             "nome": self.nome,
