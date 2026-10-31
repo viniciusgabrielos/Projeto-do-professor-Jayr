@@ -109,20 +109,20 @@ def test_identificar_mes_mais_economico_sem_despesas():
     assert resultado is None
 
 
-def test_obter_ultimos_tres_meses():
+def test_obter_ultimos_meses():
     relatorio = criar_relatorio()
 
-    resultado = relatorio._obter_ultimos_tres_meses()
+    resultado = relatorio._obter_ultimos_meses()
 
     assert len(resultado) == 3
     assert resultado[-1][1] >= 1
     assert resultado[-1][1] <= 12
 
 
-def test_comparar_ultimos_tres_meses():
+def test_comparar_ultimos_meses():
     relatorio = criar_relatorio()
 
-    meses = relatorio._obter_ultimos_tres_meses()
+    meses = relatorio._obter_ultimos_meses()
     receitas = {}
     despesas = {}
 
@@ -139,7 +139,7 @@ def test_comparar_ultimos_tres_meses():
 
     relatorio = criar_relatorio(receitas=receitas, despesas=despesas)
 
-    resultado = relatorio.comparar_ultimos_tres_meses()
+    resultado = relatorio.comparar_ultimos_meses()
 
     assert len(resultado) == 3
 
@@ -149,7 +149,7 @@ def test_comparar_ultimos_tres_meses():
 
 
 
-def test_obter_ultimos_tres_meses_na_virada_do_ano(monkeypatch):
+def test_obter_ultimos_meses_na_virada_do_ano(monkeypatch):
     class DataFalsa:
         @staticmethod
         def today():
@@ -159,7 +159,7 @@ def test_obter_ultimos_tres_meses_na_virada_do_ano(monkeypatch):
 
     relatorio = criar_relatorio()
 
-    resultado = relatorio._obter_ultimos_tres_meses()
+    resultado = relatorio._obter_ultimos_meses()
 
     assert resultado == [
         (2026, 11),
@@ -167,7 +167,7 @@ def test_obter_ultimos_tres_meses_na_virada_do_ano(monkeypatch):
         (2027, 1)
     ]
 
-def test_comparar_ultimos_tres_meses_na_virada_do_ano(monkeypatch):
+def test_comparar_ultimos_meses_na_virada_do_ano(monkeypatch):
     class DataFalsa:
         @staticmethod
         def today():
@@ -196,7 +196,7 @@ def test_comparar_ultimos_tres_meses_na_virada_do_ano(monkeypatch):
         despesas=despesas
     )
 
-    resultado = relatorio.comparar_ultimos_tres_meses()
+    resultado = relatorio.comparar_ultimos_meses()
 
     assert resultado == {
         "11/2026": {"receitas": 1000, "despesas": 400},

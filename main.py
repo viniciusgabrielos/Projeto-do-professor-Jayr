@@ -428,7 +428,7 @@ def main():
 
    
         comparacao = (
-        relatorio_financeiro.comparar_ultimos_tres_meses()
+        relatorio_financeiro.comparar_ultimos_meses()
     )
 
         print("\n--- Receitas e Despesas dos Últimos 3 Meses ---")

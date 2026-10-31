@@ -1,5 +1,6 @@
 
 from datetime import date
+from src.domain.settings import carregar_configuracoes
 
 
 class Relatorio:
@@ -83,11 +84,14 @@ class Relatorio:
             "total_despesas": totais_por_mes[mes_mais_economico]
         }
 
-    def _obter_ultimos_tres_meses(self):
+    def _obter_ultimos_meses(self):
+        configuracoes = carregar_configuracoes()
+        quantidade_meses = configuracoes["meses_comparacao"]
+
         hoje = date.today()
         meses = []
 
-        for deslocamento in range(2, -1, -1):
+        for deslocamento in range(quantidade_meses - 1, -1, -1):
             indice_mes = hoje.year * 12 + (hoje.month - 1) - deslocamento
             ano, mes = divmod(indice_mes, 12)
 
@@ -95,8 +99,8 @@ class Relatorio:
 
         return meses
 
-    def comparar_ultimos_tres_meses(self):
-        meses = self._obter_ultimos_tres_meses()
+    def comparar_ultimos_meses(self):
+        meses = self._obter_ultimos_meses()
 
         resultado = {
             (ano, mes): {

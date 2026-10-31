@@ -26,6 +26,19 @@ class Orcamento_Repositorio:
             )
 
     def adicionar_orcamento(self, mes, ano, receita_prevista):
+
+        if type(mes) != int:
+            raise ValueError("O mês deve ser um inteiro")
+
+        if mes < 1 or mes > 12:
+            raise ValueError("O mês deve estar entre 1 e 12")
+
+        if type(ano) != int:
+            raise ValueError("O ano deve ser um inteiro")
+
+        if ano < 1900 or ano > 2100:
+            raise ValueError("O ano deve estar entre 1900 e 2100")
+
         chave = f"{ano}-{mes:02d}"
 
         if chave in self.orcamentos:
@@ -41,7 +54,7 @@ class Orcamento_Repositorio:
             "mes": mes,
             "ano": ano,
             "receita_prevista": receita_prevista
-        }
+    }
 
         self.salvar()
 
