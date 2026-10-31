@@ -6,8 +6,8 @@ def carregar_configuracoes():
     caminho = Path(__file__).resolve().parents[2] / "data" / "settings.json"
 
     with open(caminho, "r", encoding="utf-8") as arquivo:
-        return json.load(arquivo)
-    
+        configuracoes = json.load(arquivo)
+
     limite = configuracoes["limite_alerta_alto_valor"]
     meses = configuracoes["meses_comparacao"]
     meta = configuracoes["meta_economia_mensal"]
