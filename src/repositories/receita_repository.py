@@ -20,15 +20,12 @@ class Receita_Repositorio:
     def _converter_para_receita(self, id_receita, dados):
         dados_receita = dados.copy()
 
-        id_categoria = dados_receita.pop("categoria_id")
-        categoria = self.categoria_repositorio.buscar_por_id(
-        id_categoria
-    )
-
-        dados_receita["categoria"] = categoria.to_dict()
         dados_receita["id"] = int(id_receita)
 
-        return Receita.from_dict(dados_receita)
+        return Receita.from_dict(
+        dados_receita,
+        self.categoria_repositorio
+    )
 
     def salvar(self):
         with self.caminho.open("w", encoding="utf-8") as arquivo:

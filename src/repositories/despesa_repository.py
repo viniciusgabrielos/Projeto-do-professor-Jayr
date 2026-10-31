@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+from src.domain.despesa import Despesa
 
 
 class Despesa_Repositorio:
@@ -14,7 +15,15 @@ class Despesa_Repositorio:
                 return json.load(arquivo)
         else:
             return {}
+    def _converter_para_despesa(self, id_despesa, dados):
+        dados_despesa = dados.copy()
 
+        dados_despesa["id"] = int(id_despesa)
+
+        return Despesa.from_dict(
+        dados_despesa,
+        self.categoria_repositorio
+    )
     def salvar(self):
         with self.caminho.open("w", encoding="utf-8") as arquivo:
             json.dump(

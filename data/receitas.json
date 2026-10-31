@@ -1,66 +1,35 @@
-
 {
-    "2": {
+    "1": {
         "valor": 3500.0,
-        "categoria": {
-            "nome": "Salário",
-            "tipo": "RECEITA",
-            "descricao": "Renda proveniente de trabalho",
-            "limite": null,
-            "id": 7
-        },
+        "categoria_id": 7,
         "data": "2026-10-05",
         "descricao": "Salário mensal",
         "forma_de_pagamento": "PIX"
     },
-    "3": {
+    "2": {
         "valor": 800.0,
-        "categoria": {
-            "nome": "Serviços",
-            "tipo": "RECEITA",
-            "descricao": "Renda obtida com prestação de serviços",
-            "limite": null,
-            "id": 8
-        },
+        "categoria_id": 8,
         "data": "2026-10-18",
         "descricao": "Pagamento por aulas particulares",
         "forma_de_pagamento": "PIX"
     },
-    "4": {
+    "3": {
         "valor": 450.0,
-        "categoria": {
-            "nome": "Vendas",
-            "tipo": "RECEITA",
-            "descricao": "Renda obtida com venda de produtos",
-            "limite": null,
-            "id": 9
-        },
+        "categoria_id": 9,
         "data": "2026-09-12",
         "descricao": "Venda de produtos",
         "forma_de_pagamento": "Dinheiro"
     },
-    "5": {
+    "4": {
         "valor": 250.0,
-        "categoria": {
-            "nome": "Serviços",
-            "tipo": "RECEITA",
-            "descricao": "Renda obtida com prestação de serviços",
-            "limite": null,
-            "id": 8
-        },
+        "categoria_id": 8,
         "data": "2026-10-25",
         "descricao": "Serviço adicional",
         "forma_de_pagamento": "Transferência"
     },
-    "6": {
+    "5": {
         "valor": 120.0,
-        "categoria": {
-            "nome": "Vendas",
-            "tipo": "RECEITA",
-            "descricao": "Renda obtida com venda de produtos",
-            "limite": null,
-            "id": 9
-        },
+        "categoria_id": 9,
         "data": "2026-08-14",
         "descricao": "Venda de produtos usados",
         "forma_de_pagamento": "Dinheiro"

@@ -18,6 +18,7 @@ from src.domain.regras_alertas import (
 from src.domain.orcamento_mensal import OrcamentoMensal
 from src.repositories.orcamento_repository import Orcamento_Repositorio
 from src.domain.saldo_atual import SaldoAtual
+from src.domain import relatorio
 
 
 
@@ -306,7 +307,9 @@ def main():
         resultado = saldo.calcular_saldo()
 
         print("\n--- Saldo Financeiro ---")
-        print(f"Saldo atual: R$ {resultado:.2f}")   
+        print(f"Saldo atual: R$ {resultado:.2f}")
+
+
     elif argumentos.comando == "fechar-mes":
         print("--- Fechamento Mensal ---")
 
@@ -375,6 +378,66 @@ def main():
             print("Meta de economia mensal atingida!")
         else:
             print("Meta de economia mensal não atingida.")
+
+    elif argumentos.comando == "relatorio-mensal":
+        print("\n--- Relatório Financeiro ---")
+
+        repositorio_categorias = Categoria_Repositorio()
+        repositorio_receitas = Receita_Repositorio(repositorio_categorias)
+        repositorio_despesas = Despesa_Repositorio(repositorio_categorias)
+
+        relatorio_financeiro = relatorio.Relatorio(
+        repositorio_receitas,
+        repositorio_despesas
+    )
+
+    
+        despesas_categoria = (
+        relatorio_financeiro.calcular_despesas_por_categoria()
+    )
+        percentuais = (
+        relatorio_financeiro.calcular_percentual_por_categoria()
+    )
+
+        print("\n--- Despesas por Categoria ---")
+
+        if not despesas_categoria:
+            print("Nenhuma despesa cadastrada.")
+        else:
+            for categoria, valor in despesas_categoria.items():
+                percentual = percentuais[categoria]
+                print(
+                f"{categoria}: R$ {valor:.2f} "
+                f"({percentual:.2f}%)"
+            )
+
+    
+        mes_economico = (
+        relatorio_financeiro.identificar_mes_mais_economico()
+    )
+
+        print("\n--- Mês Mais Econômico ---")
+
+        if mes_economico is None:
+            print("Não existem despesas para realizar a comparação.")
+        else:
+            print(
+            f"{mes_economico['mes']:02d}/{mes_economico['ano']}: "
+            f"R$ {mes_economico['total_despesas']:.2f}"
+        )
+
+   
+        comparacao = (
+        relatorio_financeiro.comparar_ultimos_tres_meses()
+    )
+
+        print("\n--- Receitas e Despesas dos Últimos 3 Meses ---")
+
+        for mes, valores in comparacao.items():
+            print(f"\nMês: {mes}")
+            print(f"Receitas: R$ {valores['receitas']:.2f}")
+            print(f"Despesas: R$ {valores['despesas']:.2f}")
+    
     else:
         print(
             f"Comando '{argumentos.comando}' "

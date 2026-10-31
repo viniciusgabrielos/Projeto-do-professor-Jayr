@@ -92,8 +92,10 @@ class Lancamento:
                 "id": self.id,
             }
     @classmethod
-    def from_dict(cls, dados):
-        categoria = Categoria.from_dict(dados["categoria"])
+    def from_dict(cls, dados, categoria_repositorio):
+        categoria = categoria_repositorio.buscar_por_id(
+        dados["categoria_id"]
+    )
 
         return cls(
             valor=dados["valor"],
@@ -102,4 +104,4 @@ class Lancamento:
             descricao=dados["descricao"],
             forma_de_pagamento=dados["forma_de_pagamento"],
             id=dados["id"],
-    )
+        )
