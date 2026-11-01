@@ -1,9 +1,9 @@
 {
     "1": {
-        "valor": 50.0,
-        "categoria_id": 1,
+        "valor": 100,
+        "categoria_id": 8,
         "data": "2026-10-27",
-        "descricao": "Compra de alimentos",
+        "descricao": "Consertei encanamento",
         "forma_de_pagamento": "PIX"
     },
     "2": {

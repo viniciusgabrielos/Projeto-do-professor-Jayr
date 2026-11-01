@@ -52,7 +52,6 @@ def main():
     parser_orcamento.add_argument("ano", type=int)
     parser_orcamento.add_argument("receita_prevista", type=float)
 
-    subparsers.add_parser("mostrar-orcamentos")
     subparsers.add_parser("fechar-mes")
 
     # 4. Saldo

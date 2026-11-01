@@ -1,9 +1,9 @@
 {
     "1": {
-        "nome": "Alimentação",
+        "nome": "Alimentação com mercado",
         "tipo": "DESPESA",
         "descricao": "Gastos com mercado",
-        "limite": 800
+        "limite": 850.0
     },
     "3": {
         "nome": "Moradia",
