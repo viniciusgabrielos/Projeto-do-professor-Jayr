@@ -88,11 +88,10 @@ class Categoria_Repositorio:
             raise ValueError("Categoria não encontrada")
 
         campos_permitidos = {
-            "nome",
-            "tipo",
-            "descricao",
-            "limite"
-        }
+        "nome",
+        "descricao",
+        "limite"
+    }
 
         for campo in alteracoes:
             if campo not in campos_permitidos:
@@ -103,17 +102,15 @@ class Categoria_Repositorio:
 
         dados_atuais["id"] = int(id_categoria)
 
-        if isinstance(dados_atuais["tipo"], str):
-            dados_atuais["tipo"] = TipoCategoria(
-                dados_atuais["tipo"].upper()
-            )
-
         categoria_atualizada = Categoria.from_dict(dados_atuais)
 
-        
-        if self._existe_categoria_equivalente(categoria_atualizada,id_categoria_a_ignorar=id_categoria):raise ValueError(
-        "Já existe uma categoria com esse nome e tipo"
-    )
+        if self._existe_categoria_equivalente(
+        categoria_atualizada,
+        id_categoria_a_ignorar=id_categoria
+    ):
+            raise ValueError(
+            "Já existe uma categoria com esse nome e tipo"
+        )
 
         dados = categoria_atualizada.to_dict()
         dados.pop("id")
@@ -122,7 +119,6 @@ class Categoria_Repositorio:
         self.salvar()
 
         return categoria_atualizada
-
     def excluir(self, id_categoria):
         id_categoria = str(id_categoria)
         if id_categoria not in self.categorias:

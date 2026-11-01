@@ -437,6 +437,92 @@ def main():
         except ValueError as erro:
             print(erro)
 
+    elif argumentos.comando == "editar-categoria":
+        categoria_repositorio = Categoria_Repositorio()
+        categorias = categoria_repositorio.listar()
+
+        if not categorias:
+            print("Não existem categorias cadastradas.")
+            return
+
+        print("\n========== CATEGORIAS ==========")
+
+        for id_categoria in categorias:
+            categoria = categoria_repositorio.buscar_por_id(id_categoria)
+            print(categoria)
+
+        id_escolhido = input(
+            "\nDigite o ID da categoria que deseja editar: "
+    )
+
+        try:
+            categoria = categoria_repositorio.buscar_por_id(id_escolhido)
+
+        except ValueError as erro:
+            print(erro)
+            return
+
+        print("\nCampos disponíveis: nome, descricao, limite")
+
+        campo = input(
+            "Qual campo deseja editar? "
+        ).strip().lower()
+
+        campos_permitidos = {
+        "nome",
+        "descricao",
+        "limite"
+    }
+
+        if campo not in campos_permitidos:
+            print("Campo inválido.")
+            return
+
+        if campo == "nome":
+            novo_valor = input("Novo nome: ").strip()
+
+            if not novo_valor:
+                print("O nome não pode ser vazio.")
+                return
+
+        elif campo == "descricao":
+            novo_valor = input("Nova descrição: ").strip()
+            novo_valor = novo_valor if novo_valor else None
+
+        elif campo == "limite":
+            if categoria.tipo == TipoCategoria.RECEITA:
+                print("Categorias de receita não possuem limite.")
+                return
+
+            while True:
+                try:
+                    novo_valor = float(
+                        input("Novo limite mensal: R$ ")
+                )
+
+                    if novo_valor > 0:
+                        break
+
+                    print("O limite deve ser maior que zero.")
+
+                except ValueError:
+                    print("Digite um valor numérico válido.")
+
+        alteracoes = {campo: novo_valor}
+
+        try:
+            categoria_atualizada = categoria_repositorio.editar(
+            id_escolhido,
+            alteracoes
+        )
+
+            print("\nCategoria atualizada com sucesso!")
+            print(categoria_atualizada)
+
+        except ValueError as erro:
+            print(erro)
+
+
     elif argumentos.comando == "adicionar-orcamento":
         try:
             repositorio_orcamentos = Orcamento_Repositorio()

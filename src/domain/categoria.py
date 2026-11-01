@@ -102,4 +102,18 @@ class Categoria:
 
         return mesmo_nome and mesmo_tipo
 
+    def __str__(self):
+        return (
+        f"ID: {self.id} | "
+        f"Nome: {self.nome} | "
+        f"Tipo: {self.tipo.value} | "
+        f"Limite: R$ {self.limite:.2f}"
+        if self.limite is not None
+        else
+        f"ID: {self.id} | "
+        f"Nome: {self.nome} | "
+        f"Tipo: {self.tipo.value} | "
+        "Limite: Não possui"
+    )
+
     
