@@ -1,28 +1,48 @@
 
-
 from src.domain.orcamento_mensal import OrcamentoMensal
-from src.repositories.categoria_repository import Categoria_Repositorio
-from src.repositories.receita_repository import Receita_Repositorio
-from src.repositories.despesa_repository import Despesa_Repositorio
+
+
+class ReceitaRepositorioFake:
+    def __init__(self, receitas):
+        self.receitas = receitas
+
+    def listar_receitas(self):
+        return self.receitas
+
+
+class DespesaRepositorioFake:
+    def __init__(self, despesas):
+        self.despesas = despesas
+
+    def listar_despesas(self):
+        return self.despesas
 
 
 def criar_orcamento(mes=10, ano=2026):
-    categoria_repositorio = Categoria_Repositorio()
+    receitas = {
+        "1": {"valor": 1000.0, "data": "2026-10-05"},
+        "2": {"valor": 2000.0, "data": "2026-10-15"},
+        "3": {"valor": 1550.0, "data": "2026-10-25"},
+        "4": {"valor": 450.0, "data": "2026-09-12"},
+    }
 
-    receita_repositorio = Receita_Repositorio(
-        categoria_repositorio
-    )
-    despesa_repositorio = Despesa_Repositorio(
-        categoria_repositorio
-    )
+    despesas = {
+        "1": {"valor": 1000.0, "data": "2026-10-08"},
+        "2": {"valor": 1230.0, "data": "2026-10-20"},
+        "3": {"valor": 90.0, "data": "2026-09-18"},
+    }
+
+    receita_repositorio = ReceitaRepositorioFake(receitas)
+    despesa_repositorio = DespesaRepositorioFake(despesas)
 
     return OrcamentoMensal(
         mes=mes,
         ano=ano,
         receita_repositorio=receita_repositorio,
         despesa_repositorio=despesa_repositorio,
-        receita_prevista=0
+        receita_prevista=3000.0
     )
+
 
 def test_calcular_receitas_outubro():
     orcamento = criar_orcamento()
@@ -46,5 +66,6 @@ def test_verificar_deficit_outubro():
 
 def test_ignorar_lancamentos_de_outros_meses():
     orcamento = criar_orcamento(mes=9, ano=2026)
+
     assert orcamento.calcular_receitas() == 450.0
     assert orcamento.calcular_despesas() == 90.0
