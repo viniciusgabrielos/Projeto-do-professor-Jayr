@@ -522,6 +522,70 @@ def main():
         except ValueError as erro:
             print(erro)
 
+    elif argumentos.comando == "excluir-categoria":
+        categoria_repositorio = Categoria_Repositorio()
+        receita_repositorio = Receita_Repositorio(categoria_repositorio)
+        despesa_repositorio = Despesa_Repositorio(categoria_repositorio)
+
+        categorias = categoria_repositorio.listar()
+
+        if not categorias:
+            print("Não existem categorias cadastradas.")
+            return
+
+        print("\n========== CATEGORIAS ==========")
+
+        for id_categoria in categorias:
+            categoria = categoria_repositorio.buscar_por_id(id_categoria)
+            print(categoria)
+
+        id_escolhido = input(
+            "\nDigite o ID da categoria que deseja excluir: "
+    )
+
+        try:
+            categoria = categoria_repositorio.buscar_por_id(id_escolhido)
+        except ValueError as erro:
+            print(erro)
+            return
+
+        # Verificar receitas vinculadas
+        receitas_vinculadas = []
+
+        for id_receita, dados in receita_repositorio.listar_receitas().items():
+            if dados["categoria_id"] == categoria.id:
+                receitas_vinculadas.append(id_receita)
+
+        # Verificar despesas vinculadas
+        despesas_vinculadas = []
+
+        for id_despesa, dados in despesa_repositorio.listar_despesas().items():
+            if dados["categoria_id"] == categoria.id:
+                despesas_vinculadas.append(id_despesa)
+
+        # Impedir exclusão caso existam lançamentos vinculados
+        if receitas_vinculadas or despesas_vinculadas:
+            print(
+                f"\nNão foi possível excluir a categoria "
+                f"'{categoria.nome}'."
+        )
+
+            if receitas_vinculadas:
+                print(f"Receitas vinculadas: {receitas_vinculadas}")
+
+            if despesas_vinculadas:
+                print(f"Despesas vinculadas: {despesas_vinculadas}")
+
+            print(
+            "\nExclua primeiro os lançamentos associados "
+            "e tente novamente."
+        )
+            return
+
+        # Excluir categoria
+        categoria_repositorio.excluir(id_escolhido)
+
+        print("\nCategoria excluída com sucesso!")
 
     elif argumentos.comando == "adicionar-orcamento":
         try:
