@@ -1,9 +1,9 @@
 {
     "1": {
-        "valor": 3500.0,
-        "categoria_id": 7,
-        "data": "2026-10-05",
-        "descricao": "Salário mensal",
+        "valor": 50.0,
+        "categoria_id": 1,
+        "data": "2026-10-27",
+        "descricao": "Compra de alimentos",
         "forma_de_pagamento": "PIX"
     },
     "2": {

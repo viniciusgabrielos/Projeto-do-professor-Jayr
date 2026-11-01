@@ -33,20 +33,37 @@ def main():
         required=True
     )
 
+    # 1. Receitas e despesas
     subparsers.add_parser("adicionar-despesa")
-    subparsers.add_parser("listar-categorias")
     subparsers.add_parser("adicionar-receita")
+    subparsers.add_parser("excluir-despesa")
+    subparsers.add_parser("excluir-receita")
+    subparsers.add_parser("listar-lancamentos")
 
+    # 2. Categorias
+    subparsers.add_parser("listar-categorias")
+    subparsers.add_parser("adicionar-categoria")
+    subparsers.add_parser("editar-categoria")
+    subparsers.add_parser("excluir-categoria")
+
+    # 3. Orçamentos
     parser_orcamento = subparsers.add_parser("adicionar-orcamento")
     parser_orcamento.add_argument("mes", type=int)
     parser_orcamento.add_argument("ano", type=int)
     parser_orcamento.add_argument("receita_prevista", type=float)
+
+    subparsers.add_parser("mostrar-orcamentos")
+    subparsers.add_parser("fechar-mes")
+
+    # 4. Saldo
     subparsers.add_parser("consultar-saldo")
 
-    subparsers.add_parser("fechar-mes")
+    # 5. Relatórios
     subparsers.add_parser("relatorio-mensal")
 
     argumentos = parser.parse_args()
+
+    
 
     if argumentos.comando == "adicionar-despesa":
         print("--- Cadastro de Despesa ---")
@@ -160,104 +177,189 @@ def main():
         if alerta_limite is not None:
             print("ALERTA:", alerta_limite.mensagem)
 
+
     elif argumentos.comando == "adicionar-receita":
         print("--- Cadastro de Receita ---")
-
+    
         while True:
             try:
                 valor = float(input("Valor da receita: R$ "))
-
+    
                 if valor > 0:
                     break
-
+    
                 print("O valor deve ser maior que 0. Tente novamente.")
-
+    
             except ValueError:
                 print("Valor inválido! Digite um número válido.")
-
+    
         repositorio_categorias = Categoria_Repositorio()
         categorias = repositorio_categorias.listar()
-
+    
         tem_categoria_receita = False
-
+    
         for dados in categorias.values():
             if dados["tipo"] == "RECEITA":
                 tem_categoria_receita = True
                 break
-
+    
         if not tem_categoria_receita:
             print("Nenhuma categoria de receita cadastrada.")
             return
-
+    
         print("\nCategorias disponíveis para receitas:")
-
+    
         for id_cat, dados in categorias.items():
             if dados["tipo"] == "RECEITA":
                 print(
-                    f"ID: {id_cat} | "
-                    f"Nome: {dados['nome']}"
-                )
-
+                        f"ID: {id_cat} | "
+                        f"Nome: {dados['nome']}"
+                    )
+    
         while True:
             id_categoria = input("\nID da categoria: ")
-
-            if (
-                id_categoria in categorias
-                and categorias[id_categoria]["tipo"] == "RECEITA"
-            ):
+    
+            if (id_categoria in categorias and categorias[id_categoria]["tipo"] == "RECEITA"
+                ):
                 break
-
-            print(
-                "ID inválido ou categoria não encontrada. "
-                "Tente novamente."
-            )
-
+    
+            print("ID inválido ou categoria não encontrada."
+                    "Tente novamente."
+                )
+    
         dados_categoria = categorias[id_categoria]
-
+    
         categoria = Categoria.from_dict({
-            **dados_categoria,
-            "id": int(id_categoria)
-        })
-
+                **dados_categoria,
+                "id": int(id_categoria)
+            })
+    
         while True:
             try:
                 data_receita = datetime.strptime(
-                    input("Data da receita (DD-MM-AAAA): "),
-                    "%d-%m-%Y"
-                ).date()
-
+                        input("Data da receita (DD-MM-AAAA): "),
+                        "%d-%m-%Y"
+                    ).date()
+    
                 break
-
+    
             except ValueError:
                 print("Data inválida! Digite no formato DD-MM-AAAA.")
-
+    
         descricao = input("Descrição da receita: ").strip()
-
+    
         while True:
             forma_de_pagamento = input("Forma de pagamento: ").strip()
-
+    
             if forma_de_pagamento:
                 break
-
-            print(
-                "A forma de pagamento não pode ser vazia. "
-                "Tente novamente."
-            )
-
+    
+            print("A forma de pagamento não pode ser vazia. "
+                    "Tente novamente."
+                )
+    
         receita = Receita(
-            valor=valor,
-            categoria=categoria,
-            data=data_receita,
-            descricao=descricao,
-            forma_de_pagamento=forma_de_pagamento
-        )
-
+                valor=valor,
+                categoria=categoria,
+                data=data_receita,
+                descricao=descricao,
+                forma_de_pagamento=forma_de_pagamento
+            )
+    
         repositorio_receitas = Receita_Repositorio(repositorio_categorias)
         repositorio_receitas.adicionar_receita(receita)
-
+    
         print("Receita cadastrada com sucesso!")
         print("ID da receita:", receita.id)
+    
 
+    elif argumentos.comando == "excluir-despesa":
+        categoria_repositorio = Categoria_Repositorio()
+        despesa_repositorio = Despesa_Repositorio(categoria_repositorio)
+
+        despesas = despesa_repositorio.listar_despesas()
+
+        if not despesas:
+            print("Não existem despesas cadastradas.")
+        else:
+            print("\n--- Despesas cadastradas ---")
+
+            for id_despesa, dados in despesas.items():
+                despesa = despesa_repositorio._converter_para_despesa(id_despesa, dados)
+                print(f"ID: {id_despesa} | {despesa}")
+
+            id_despesa = input("\nDigite o ID da despesa que deseja excluir: "
+        )
+
+            try:
+                despesa_repositorio.excluir_despesa(id_despesa)
+                print("Despesa excluída com sucesso!")
+            except ValueError as erro:
+                print(erro)
+
+    elif argumentos.comando == "excluir-receita":
+        categoria_repositorio = Categoria_Repositorio()
+        receita_repositorio = Receita_Repositorio(categoria_repositorio)
+
+        receitas = receita_repositorio.listar_receitas()
+
+        if not receitas:
+            print("Não existem receitas cadastradas.")
+        else:
+            print("\n--- Receitas cadastradas ---")
+
+            for id_receita, dados in receitas.items():
+
+                receita = receita_repositorio._converter_para_receita(
+                id_receita, dados
+            )
+                print(f"ID: {id_receita} | {receita}")
+
+            id_receita = input("\nDigite o ID da receita que deseja excluir: ")
+
+            try:
+                receita_repositorio.excluir_receita(id_receita)
+                print("Receita excluída com sucesso!")
+            except ValueError as erro:
+                print(erro)
+
+    elif argumentos.comando == "listar-lancamentos":
+        categoria_repositorio = Categoria_Repositorio()
+        receita_repositorio = Receita_Repositorio(categoria_repositorio)
+        despesa_repositorio = Despesa_Repositorio(categoria_repositorio)
+
+        receitas = receita_repositorio.listar_receitas()
+        despesas = despesa_repositorio.listar_despesas()
+
+        if not receitas and not despesas:
+            print("Não existem lançamentos cadastrados.")
+        else:
+            print("\n========== LANÇAMENTOS ==========")
+
+            print("\n--- RECEITAS ---")
+
+            if receitas:
+                for id_receita, dados in receitas.items():
+
+                    receita = receita_repositorio._converter_para_receita(
+                    id_receita, dados
+                )
+                    print(f"ID: {id_receita} | {receita}")
+            else:
+                print("Nenhuma receita cadastrada.")
+
+            print("\n--- DESPESAS ---")
+
+            if despesas:
+                for id_despesa, dados in despesas.items():
+
+                    despesa = despesa_repositorio._converter_para_despesa(
+                    id_despesa, dados
+                )
+                    print(f"ID: {id_despesa} | {despesa}")
+            else:
+                print("Nenhuma despesa cadastrada.")
+    
     elif argumentos.comando == "listar-categorias":
         repositorio = Categoria_Repositorio()
         categorias = repositorio.listar()
