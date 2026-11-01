@@ -4,7 +4,7 @@ import argparse
 from datetime import datetime, date
 from src.domain.despesa import Despesa
 from src.repositories.despesa_repository import Despesa_Repositorio
-from src.domain.categoria import Categoria
+from src.domain.categoria import Categoria,TipoCategoria
 from src.domain.receita import Receita
 from src.repositories.receita_repository import Receita_Repositorio
 from src.repositories.alerta_repository import Alerta_Repositorio
@@ -374,6 +374,69 @@ def main():
                     f"Tipo: {dados['tipo']} | "
                     f"Limite: {dados['limite']}"
                 )
+
+    elif argumentos.comando == "adicionar-categoria":
+        print("--- Cadastro de Categoria ---")
+
+        while True:
+            nome = input("Nome da categoria: ").strip()
+
+            if nome:
+                break
+
+            print("O nome da categoria não pode ser vazio.")
+
+        while True:
+            tipo_escolhido = input(
+            "Tipo da categoria (RECEITA/DESPESA): "
+        ).strip().upper()
+
+            if tipo_escolhido == "RECEITA":
+                tipo = TipoCategoria.RECEITA
+                break
+
+            elif tipo_escolhido == "DESPESA":
+                tipo = TipoCategoria.DESPESA
+                break
+
+            print("Tipo inválido. Digite RECEITA ou DESPESA.")
+
+        descricao = input("Descrição da categoria (opcional): "
+    ).strip()
+
+        if tipo == TipoCategoria.DESPESA:
+            while True:
+                try:
+                    limite = float(input("Limite mensal da categoria: R$ ")
+                )
+
+                    if limite > 0:
+                        break
+
+                    print("O limite deve ser maior que zero.")
+
+                except ValueError:
+                    print("Digite um valor numérico válido.")
+        else:
+            limite = None
+
+        try:
+            categoria = Categoria(
+            nome=nome,
+            tipo=tipo,
+            descricao=descricao,
+            limite=limite
+        )
+
+            categoria_repositorio = Categoria_Repositorio()
+            categoria_repositorio.adicionar(categoria)
+
+            print("Categoria cadastrada com sucesso!")
+            print(f"ID da categoria: {categoria.id}")
+
+        except ValueError as erro:
+            print(erro)
+
     elif argumentos.comando == "adicionar-orcamento":
         try:
             repositorio_orcamentos = Orcamento_Repositorio()
@@ -389,7 +452,7 @@ def main():
         except ValueError as erro:
             print(f"Erro: {erro}")
 
-
+    
     elif argumentos.comando == "consultar-saldo":
         repositorio_categorias = Categoria_Repositorio()
 
