@@ -113,7 +113,7 @@ Projeto-do-professor-Jayr/
 ### 1. Clonar o repositório
 
 ```bash
-git clone URL_DO_REPOSITORIO
+git clone https://github.com/viniciusgabrielos/Projeto-do-professor-Jayr
 ```
 
 ### 2. Acessar a pasta do projeto
@@ -226,12 +226,7 @@ pytest
 
 - **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período. Assim, é responsabilidade do usuário adicionar orçamento e depois, preferencialmente, no último dia do mês, realizar o comando de fechar o mês. Sem esse passo a passo, há um comprometimento de algumas funcionalidades, como a falta da emissão do alerta do saldo mensal ser negativo.
 - **Receitas e despesas:** o sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
-## Decisões de design
-
-- **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período.
-- **Receitas e despesas:** o sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
 - **Dados iniciais (seeds):** os arquivos JSON disponibilizados no projeto contêm dados iniciais que permitem executar e testar as funcionalidades do sistema sem precisar cadastrar todas as informações manualmente desde o início.
-
 ## Autor
 
 Vinicius Gabriel Oliveira Santos
