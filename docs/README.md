@@ -1,91 +1,237 @@
-# Sistema de Controle de Despesas Pessoais
+# Sistema de Controle Financeiro Pessoal
 
-## Diagrama UML
-[Visualizar o UML](UML.md)
+## Sobre o projeto
 
-## Descrição
+Sistema de controle financeiro pessoal desenvolvido em Python como projeto acadêmico da disciplina de Programação Orientada a Objetos (POO).
 
-Projeto desenvolvido para a disciplina de Programação Orientada a Objetos (POO), com o objetivo de desenvolver um sistema para controle de despesas pessoais.
-
-O sistema será utilizado para registrar receitas e despesas, organizar lançamentos por categorias, acompanhar o orçamento mensal, consultar saldos e gerar relatórios e alertas financeiros.
+O sistema permite registrar receitas e despesas, organizar categorias financeiras, acompanhar o saldo acumulado, cadastrar orçamentos mensais e gerar relatórios e alertas relacionados à movimentação financeira.
 
 ## Objetivo
 
-O projeto tem como objetivo aplicar conceitos de Programação Orientada a Objetos na construção de um sistema de controle financeiro pessoal.
+Aplicar conceitos de Programação Orientada a Objetos, como encapsulamento, herança, abstração e organização de responsabilidades, por meio do desenvolvimento de uma aplicação de controle financeiro pessoal.
 
-Entre os principais recursos planejados estão:
+## Funcionalidades
 
-* Cadastro e gerenciamento de categorias;
-* Registro de receitas e despesas como um lançamento;
-* Controle do orçamento mensal;
-* Consulta do saldo diário;
-* Geração de relatórios financeiros;
-* Geração de alertas para situações definidas pelo sistema.
+- Cadastro, listagem e exclusão de receitas e despesas.
+- Gerenciamento de categorias financeiras.
+- Classificação de categorias entre receitas e despesas.
+- Definição de limites mensais para categorias de despesas.
+- Cadastro de previsão de receitas por mês.
+- Consulta ao saldo financeiro acumulado.
+- Fechamento e análise financeira do mês atual.
+- Relatórios de despesas por categoria e percentuais.
+- Identificação do mês mais econômico.
+- Comparação de receitas e despesas dos últimos meses.
+- Geração de alertas financeiros.
 
-## Modelagem
+## Tecnologias utilizadas
 
-A estrutura do sistema foi planejada utilizando conceitos de Programação Orientada a Objetos, com definição de classes, atributos, métodos, herança e associações entre os elementos do sistema.
+- Python
+- JSON para persistência de dados
+- Argparse para interface de comandos no terminal
+- Pytest para testes automatizados
 
-O diagrama UML apresenta visualmente a estrutura e os relacionamentos definidos para o projeto.
+## Arquitetura e modelagem
 
-A descrição da responsabilidade de cada classe e sua estrutura inicial estão presentes no arquivo `classes.py`.
+O projeto utiliza uma organização baseada em classes de domínio e repositórios, separando as regras e cálculos financeiros da persistência dos dados.
 
-## Classes planejadas
+### Classes principais
 
-* `Lancamento`
+- **Lancamento:** classe-base de receitas e despesas. Possui validações de valor, categoria e data, além de métodos de conversão de dados.
+- **Receita:** representa entradas financeiras e herda os atributos e comportamentos de `Lancamento`. Exige uma categoria do tipo receita.
+- **Despesa:** representa saídas financeiras e herda os atributos e comportamentos de `Lancamento`. Exige uma categoria do tipo despesa.
+- **Categoria:** representa a classificação dos lançamentos, contendo nome, tipo, descrição e limite. Categorias de despesas possuem limite positivo, enquanto categorias de receitas não possuem limite.
+- **OrcamentoMensal:** realiza cálculos financeiros de determinado mês, incluindo receitas, despesas, saldo, déficit, comparação com receita prevista e meta de economia.
+- **SaldoAtual:** calcula o saldo financeiro acumulado considerando todas as receitas e despesas registradas.
+- **Relatorio:** organiza informações financeiras, como despesas por categoria, percentuais, mês mais econômico e comparativos mensais.
+- **Alerta:** representa avisos financeiros gerados pelo sistema, utilizando tipos definidos pelo enum `TipoAlerta`.
 
-No lançamento, tem atributos de valor que recebe a quantidade que foi gasta ou ganha, associa-se com a classe catergoria, recebendo qual setor é essa receita ou essa despesa, há a data desse lançamento, uma pequena descrição e a forma que foi pago a despesa ou recebido a receita.
+### Diagrama UML
 
-Os métodos resumem-se a criar, editar ou excluir determinado lançamento.
+O diagrama UML completo, com as classes de domínio e seus relacionamentos, está disponível em:
 
-* `Receita`
+[Visualizar UML](UML.md)
 
-Herda de lançamento.
-
-Possui métodos próprios de criar e editar uma receita.
-* `Despesa`
-
-Herda de lançamento.
-
-Possui métodos próprios de criar e editar uma despesa.
-
-* `Categoria`
-
-Possui nome, tipo, sendo uma receita ou uma despesa, descrição e um limite como atributos. Esse limite será associado ao tipo despesa.
-
-Seus métodos consistem em criar, editar ou excluir essa categoria.
-* `OrcamentoMensal`
-
-Tem mês, uma previsão de receitas e uma previsão de despesas como atributos.
-
-Tem métodos de calcular Receita total em um mês, calcular Despesa total em um mês e calcular um saldo de um mês, usando o balanço entre receitas e despesas de um mês.
-
-* `SaldoDiario`
-
-Tem como atributo o dia.
-
-Seu método consiste em calcular o saldo daquele dia.
-
-* `Relatorio`
-
-Tem como atributo um mês.
-
-Seus métodos consistem em mostrar despesa por categoria, mostrar despesa por forma de pagamento, mostrar gastos ou ganhos na forma percentual de acordo com cada categoria, mostrar mês mais econômico e mostrar um comparativo de gastos e ganhos nos últimos 3 meses.
-
-* `Alerta`
-
-Tem como atributo a data que ele foi emitido, a mensagem que aparecerá e o tipo, sendo esse tipo sendo um alerta pelo valor do lançamento de uma despesa ser alto, pelo valor limite ultrapassado em uma categoria, ou por um saldo mensal negativo.
-
-Há métodos para emitir o alerta e registrar em um banco de dados.
+As dependências relacionadas aos repositórios são explicadas no próprio documento.
 
 ## Estrutura do projeto
 
 ```text
 Projeto-do-professor-Jayr/
 │
-├── README.md
-├── .gitignore
-├── UML.md
-└── classes.py
+├── data/
+│   ├── alertas.json
+│   ├── categorias.json
+│   ├── despesas.json
+│   ├── orcamentos.json
+│   ├── receitas.json
+│   └── settings.json
+│
+├── docs/
+│   ├── README.md
+│   └── UML.md
+│
+├── src/
+│   ├── domain/
+│   │   ├── alerta.py
+│   │   ├── categoria.py
+│   │   ├── despesa.py
+│   │   ├── lancamento.py
+│   │   ├── orcamento_mensal.py
+│   │   ├── receita.py
+│   │   ├── regras_alertas.py
+│   │   ├── relatorio.py
+│   │   ├── saldo_atual.py
+│   │   └── settings.py
+│   │
+│   └── repositories/
+│       ├── alerta_repository.py
+│       ├── categoria_repository.py
+│       ├── despesa_repository.py
+│       ├── orcamento_repository.py
+│       └── receita_repository.py
+│
+├── test/
+│   ├── test_alerta.py
+│   ├── test_categoria.py
+│   ├── test_heranca.py
+│   ├── test_lancamento.py
+│   ├── test_orcamento_mensal.py
+│   └── test_relatorio.py
+│
+├── main.py
+└── .gitignore
 ```
 
+## Instalação e execução
+
+### Pré-requisitos
+
+- Python 3 instalado.
+- Git instalado, caso o projeto seja baixado diretamente pelo repositório.
+
+### 1. Clonar o repositório
+
+```bash
+git clone URL_DO_REPOSITORIO
+```
+
+### 2. Acessar a pasta do projeto
+
+```bash
+cd Projeto_do_professor_Jayr
+```
+
+### 3. Executar o sistema
+
+```bash
+python main.py
+```
+
+O comando apresenta a ajuda do sistema quando nenhum subcomando é informado.
+
+## Comandos disponíveis
+
+Todos os comandos devem ser executados no terminal, a partir da pasta principal do projeto, utilizando a seguinte estrutura:
+
+```bash
+python main.py comando
+```
+
+Para consultar os comandos disponíveis:
+
+```bash
+python main.py --help
+```
+
+| Comando | Finalidade |
+|---|---|
+| `adicionar-receita` | Cadastra uma receita, solicitando os dados necessários. |
+| `adicionar-despesa` | Cadastra uma despesa e verifica possíveis alertas financeiros. |
+| `excluir-receita` | Exclui uma receita cadastrada. |
+| `excluir-despesa` | Exclui uma despesa cadastrada. |
+| `listar-lancamentos` | Lista as receitas e despesas registradas. |
+| `listar-categorias` | Lista as categorias cadastradas. |
+| `adicionar-categoria` | Cadastra uma nova categoria. |
+| `editar-categoria` | Edita informações de uma categoria existente. |
+| `excluir-categoria` | Exclui uma categoria não associada a lançamentos. |
+| `adicionar-orcamento` | Cadastra uma previsão de receita para determinado mês e ano. |
+| `fechar-mes` | Realiza a análise financeira do mês atual. |
+| `consultar-saldo` | Consulta o saldo financeiro acumulado. |
+| `relatorio-mensal` | Apresenta informações e comparações financeiras mensais. |
+
+### Exemplos
+
+```bash
+python main.py adicionar-receita
+```
+
+```bash
+python main.py adicionar-despesa
+```
+
+```bash
+python main.py consultar-saldo
+```
+
+## Persistência e configurações
+
+O sistema utiliza arquivos JSON para armazenar os dados financeiros.
+
+| Arquivo | Conteúdo |
+|---|---|
+| `receitas.json` | Receitas cadastradas. |
+| `despesas.json` | Despesas cadastradas. |
+| `categorias.json` | Categorias financeiras. |
+| `orcamentos.json` | Orçamentos mensais. |
+| `alertas.json` | Alertas gerados. |
+| `settings.json` | Configurações do sistema. |
+
+As configurações incluem:
+
+- `limite_alerta_alto_valor`: valor mínimo para geração de alerta de alto gasto.
+- `meses_comparacao`: quantidade de meses considerados nos comparativos.
+- `meta_economia_mensal`: percentual da receita realizada utilizado como meta de economia.
+
+## Alertas financeiros
+
+Os alertas são representados pela classe `Alerta`, enquanto as regras de geração estão separadas no módulo `regras_alertas.py`.
+
+| Tipo de alerta | Critério |
+|---|---|
+| Alto valor | Uma despesa individual atinge ou ultrapassa o limite configurado. |
+| Limite excedido | O total de despesas de uma categoria ultrapassa seu limite mensal. |
+| Déficit orçamentário | As despesas mensais superam as receitas. |
+| Previsão de receita | Informa se a receita realizada atingiu a previsão cadastrada. |
+| Meta de economia | Informa se o saldo atingiu a meta de economia estabelecida. |
+
+### Quando os alertas são gerados?
+
+- **Cadastro de despesa:** verifica alertas de alto valor e limite excedido.
+- **Fechamento mensal:** verifica déficit, compara a receita realizada com a previsão e avalia a meta de economia.
+
+Os alertas gerados são armazenados em `alertas.json`.
+
+## Testes
+
+O projeto utiliza Pytest para testes automatizados das classes e funcionalidades do domínio.
+
+Para executar os testes, utilize:
+
+```bash
+pytest
+```
+
+## Decisões de design
+
+- **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período. Assim, é responsabilidade do usuário adicionar orçamento e depois, preferencialmente, no último dia do mês, realizar o comando de fechar o mês. Sem esse passo a passo, há um comprometimento de algumas funcionalidades, como a falta da emissão do alerta do saldo mensal ser negativo.
+- **Receitas e despesas:** o sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
+## Decisões de design
+
+- **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período.
+- **Receitas e despesas:** o sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
+- **Dados iniciais (seeds):** os arquivos JSON disponibilizados no projeto contêm dados iniciais que permitem executar e testar as funcionalidades do sistema sem precisar cadastrar todas as informações manualmente desde o início.
+
+## Autor
+
+Vinicius Gabriel Oliveira Santos

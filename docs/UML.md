@@ -1,104 +1,117 @@
 
+# UML — Sistema de Controle Financeiro
+
 ```mermaid
 classDiagram
+    direction TB
 
     class Lancamento {
-        - valor
-        - categoria
-        - data
-        - descricao
-        - formaPagamento
-        + cadastrar()
-        + editar()
-        + excluir()
+        -valor
+        -categoria
+        -data
+        -descricao
+        -forma_de_pagamento
+        -id
+        +to_dict()
+        +from_dict()
     }
 
-    class Receita {
-        + cadastrarReceita()
-        + editarReceita()
-    }
-
-    class Despesa {
-        + cadastrarDespesa()
-        + editarDespesa()
-    }
+    class Receita
+    class Despesa
 
     class Categoria {
-        - nome
-        - tipo
-        - descricao
-        - limite
-        + criar()
-        + editar()
-        + excluir()
+        -nome
+        -tipo
+        -descricao
+        -limite
+        -id
+        +to_dict()
+        +from_dict()
+        +__eq__()
+    }
+
+    class TipoCategoria {
+        <<enumeration>>
+        RECEITA
+        DESPESA
     }
 
     class OrcamentoMensal {
-        - mes
-        - previsaoReceitas
-        - previsaoDespesas
-        + calcularTotalReceita()
-        + calcularTotalDespesa()
-        + calcularSaldo()
+        -mes
+        -ano
+        -receita_prevista
+        +calcular_receitas()
+        +calcular_despesas()
+        +calcular_saldo()
+        +verificar_deficit()
+        +comparar_receita_prevista()
+        +verificar_meta_economia()
     }
 
-    class SaldoDiario {
-        - dia
-        + consultarSaldo()
+    class SaldoAtual {
+        +calcular_saldo()
     }
 
     class Relatorio {
-        - mes
-        + mostrarDespesaPorCategoria()
-        + mostrarDespesaPorFormaPagamento()
-        + mostrarPercentualCategoria()
-        + mostrarMesMaisEconomico()
-        + mostrarComparativoUltimos3Meses()
-    }
-    
-    class Alerta {
-        - data
-        - mensagem
-        - tipo
-        + emitir()
-        + registrar()
+        +calcular_despesas_por_categoria()
+        +calcular_percentual_por_categoria()
+        +identificar_mes_mais_economico()
+        +comparar_ultimos_meses()
     }
 
+    class Alerta {
+        -tipo
+        -mensagem
+        -data
+    }
+
+    class TipoAlerta {
+        <<enumeration>>
+        ALTO_VALOR
+        LIMITE_EXCEDIDO
+        DEFICIT_ORCAMENTARIO
+        PREVISAO_RECEITA
+        META_ECONOMIA
+    }
 
     Lancamento <|-- Receita
     Lancamento <|-- Despesa
 
-    Categoria "1" <-- "0..*" Lancamento
-    OrcamentoMensal "1" <-- "0..*" Lancamento
-    SaldoDiario "1" <-- "0..*" Lancamento
-    Relatorio "1" <-- "0..*" Lancamento
-    Relatorio "1" <-- "0..*" OrcamentoMensal
+    Lancamento "0..*" --> "1" Categoria : possui
+    Categoria --> TipoCategoria : possui tipo
+    Alerta --> TipoAlerta : possui tipo
 
-    Despesa "1" <-- "0..*" Alerta
-    Categoria "1" <-- "0..*" Alerta
-    OrcamentoMensal "1" <-- "0..*" Alerta
-  ```  
+    OrcamentoMensal ..> Receita : consulta dados
+    OrcamentoMensal ..> Despesa : consulta dados
 
+    SaldoAtual ..> Receita : consulta dados
+    SaldoAtual ..> Despesa : consulta dados
 
+    Relatorio ..> Receita : consulta dados
+    Relatorio ..> Despesa : consulta dados
+    Relatorio ..> Categoria : consulta dados
+
+    Alerta ..> Despesa : pode ser gerado por
+    Alerta ..> Categoria : verifica limite
+    Alerta ..> OrcamentoMensal : utiliza informações
+```
 
 ## Relações entre as classes
 
-* **Receita e Despesa → Lançamento:** `Receita` e `Despesa` são tipos de `Lançamento`. Por isso, as duas herdam as características básicas de um lançamento financeiro.
+As setas do diagrama representam os relacionamentos e as dependências entre as classes do domínio:
 
-* **Lançamento → Categoria:** cada lançamento está ligado a uma categoria, como alimentação, transporte, salário ou lazer. Uma categoria pode ter vários lançamentos.
+- **Herança:** `Receita` e `Despesa` herdam os atributos e comportamentos de `Lancamento`.
+- **Associação:** cada `Lancamento` possui uma `Categoria`, que determina sua classificação como receita ou despesa.
+- **Dependência:** `OrcamentoMensal`, `SaldoAtual` e `Relatorio` utilizam informações de receitas, despesas e categorias para realizar seus cálculos e consultas.
 
-* **Lançamento → OrçamentoMensal:** os lançamentos ficam associados ao orçamento do mês em que foram registrados. Um orçamento mensal pode reunir vários lançamentos.
+### Relação com os repositórios
 
-* **Lançamento → SaldoDiario:** o saldo de um determinado dia é calculado a partir dos lançamentos daquele dia.
+Embora os repositórios não estejam representados diretamente no diagrama, eles são responsáveis pela persistência e recuperação dos dados utilizados pelas classes:
 
-* **Relatorio → Lançamento:** os relatórios utilizam os lançamentos para organizar e apresentar informações, como despesas por categoria ou por forma de pagamento.
+- `Receita_Repositorio`: armazenamento, listagem e exclusão de receitas.
+- `Despesa_Repositorio`: armazenamento, listagem e exclusão de despesas.
+- `Categoria_Repositorio`: armazenamento, consulta, edição e exclusão de categorias.
+- `Orcamento_Repositorio`: armazenamento e recuperação de orçamentos mensais.
+- `Alerta_Repositorio`: armazenamento e recuperação dos alertas gerados pelo sistema.
 
-* **Relatorio → OrçamentoMensal:** os relatórios também utilizam os orçamentos mensais para fazer comparações entre meses e identificar informações como o mês com menor gasto.
-
-* **Despesa → Alerta:** uma despesa pode gerar um alerta, por exemplo, quando ultrapassa o valor definido para um alerta de alto gasto.
-
-* **Categoria → Alerta:** uma categoria pode gerar um alerta quando suas despesas ultrapassam o limite estabelecido.
-
-* **OrçamentoMensal → Alerta:** um orçamento mensal pode gerar um alerta quando o saldo do mês fica negativo.
-
-De forma geral, `Lancamento` é a parte central do sistema, pois as receitas e despesas são tipos de lançamento e várias outras classes utilizam essas informações para realizar seus cálculos e gerar consultas ou alertas.
+As setas tracejadas representam dependências e consultas realizadas por meio desses repositórios, e não necessariamente associações diretas entre objetos. Dessa forma, o diagrama mantém o foco nas classes do domínio, enquanto os repositórios são descritos separadamente.
