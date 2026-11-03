@@ -212,7 +212,49 @@ Os alertas são representados pela classe `Alerta`, enquanto as regras de geraç
 
 Os alertas gerados são armazenados em `alertas.json`.
 
-## Testes
+## Execução dos testes
+
+O projeto utiliza o Pytest para executar testes automatizados das classes e funcionalidades do sistema.
+
+### Passo a passo
+
+**1. Verificar se o Python está instalado**
+
+No terminal, execute:
+
+```bash
+python --version
+```
+
+**2. Instalar o Pytest**
+
+Caso ainda não esteja instalado, execute:
+
+```bash
+python -m pip install pytest
+```
+
+**3. Acessar a pasta principal do projeto**
+
+Certifique-se de estar na pasta onde se encontra o arquivo `main.py`.
+
+**4. Executar os testes**
+
+No terminal, execute:
+
+```bash
+python -m pytest -q
+```
+
+O Pytest identificará automaticamente os arquivos de teste e executará os casos implementados.
+
+**5. Interpretar o resultado**
+
+- `passed`: teste executado com sucesso.
+- `failed`: teste executado, mas apresentou resultado diferente do esperado.
+- `error`: ocorreu um erro durante a execução do teste.
+
+Ao final, será apresentada uma síntese dos resultados, indicando quantos testes foram executados e quantos passaram ou falharam.
 
 O projeto utiliza Pytest para testes automatizados das classes e funcionalidades do domínio.
 
