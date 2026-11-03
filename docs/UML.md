@@ -12,6 +12,7 @@ classDiagram
         -descricao
         -forma_de_pagamento
         -id
+        +__str()__
         +to_dict()
         +from_dict()
     }
@@ -27,7 +28,10 @@ classDiagram
         -id
         +to_dict()
         +from_dict()
+        +__str__()
         +__eq__()
+        +__contains__()
+        +__len__()
     }
 
     class TipoCategoria {
