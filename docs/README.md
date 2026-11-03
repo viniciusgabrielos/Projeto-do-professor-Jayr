@@ -232,18 +232,19 @@ Os testes automatizados estão organizados em arquivos que verificam as principa
 - **`test_orcamento_mensal.py`**: verifica os cálculos de receitas, despesas, saldo e déficit mensal, além da separação dos lançamentos por período.
 - **`test_relatorio.py`**: testa os cálculos de despesas e percentuais por categoria, identificação do mês mais econômico e comparação entre períodos, incluindo a virada do ano.
 
-## Decisões de design
+- **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano específicos. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período. Recomenda-se que o usuário cadastre o orçamento no início do mês e realize o fechamento, preferencialmente, no último dia do período. Caso o fechamento não seja realizado, algumas funcionalidades, como a geração de alertas de déficit mensal, podem ser comprometidas.
 
-- **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período. Assim, é responsabilidade do usuário adicionar orçamento e depois, preferencialmente, no último dia do mês, realizar o comando de fechar o mês. Sem esse passo a passo, há um comprometimento de algumas funcionalidades, como a falta da emissão do alerta do saldo mensal ser negativo.
 - **Receitas e despesas:** o sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
+
 - **Dados iniciais (seeds):** os arquivos JSON disponibilizados no projeto contêm dados iniciais que permitem executar e testar as funcionalidades do sistema sem precisar cadastrar todas as informações manualmente desde o início.
-- **Main.py:** todos os comandos no main.py podem ser acessados usando "python main.py comando-escolhido", com exceção do adicionar-orcamento, é necessário informar além do comando, mês que está fazendo o orçamento, o ano e a receita prevista para esse mês, assim:
+
+- **Interface de comandos (`main.py`):** os comandos do sistema são executados por meio do terminal, utilizando a estrutura `python main.py comando`. O comando `adicionar-orcamento` possui argumentos posicionais obrigatórios, sendo necessário informar o mês, o ano e a receita prevista. Por exemplo:
+
 ```bash
 python main.py adicionar-orcamento 10 2026 4000
 ```
-Nesse exemplo, o usuário está adicionando um orçamento do mês de outubro, do ano de 2026 e está prevendo que irá receber 4000 reais. 
-É interessante que isso seja feito no início de cada mês.
 
+Nesse exemplo, é cadastrado um orçamento para outubro de 2026, com previsão de receita de R$ 4.000,00. Recomenda-se realizar esse cadastro no início de cada mês.
 ## Autor
 
 Vinicius Gabriel Oliveira Santos
