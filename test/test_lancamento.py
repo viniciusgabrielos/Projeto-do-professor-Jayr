@@ -1,3 +1,4 @@
+
 import pytest
 from datetime import date
 
@@ -5,6 +6,7 @@ from src.domain.categoria import Categoria, TipoCategoria
 from src.domain.lancamento import Lancamento
 
 
+# Verifica a criação de um lançamento com dados válidos.
 def test_criar_lancamento_valido():
     categoria = Categoria(
         nome="Alimentação",
@@ -21,12 +23,15 @@ def test_criar_lancamento_valido():
         forma_de_pagamento="PIX"
     )
 
+    # Confirma se os atributos foram armazenados corretamente.
     assert lancamento.valor == 50.0
     assert lancamento.categoria == categoria
     assert lancamento.data == date(2026, 10, 20)
     assert lancamento.descricao == "Compra no mercado"
     assert lancamento.forma_de_pagamento == "PIX"
 
+
+# Verifica se lançamentos com valores inválidos são rejeitados.
 def test_lancamento_rejeita_valor_invalido():
     categoria = Categoria(
         nome="Alimentação",

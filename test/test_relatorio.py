@@ -7,6 +7,7 @@ import src.domain.relatorio as modulo_relatorio
 from datetime import date as DataOriginal
 
 
+# Cria um relatório com repositórios simulados.
 def criar_relatorio(despesas=None, receitas=None, categorias=None):
     categoria_repositorio = Mock()
     categoria_repositorio.listar.return_value = categorias or {}
@@ -21,6 +22,7 @@ def criar_relatorio(despesas=None, receitas=None, categorias=None):
     return Relatorio(receita_repositorio, despesa_repositorio)
 
 
+# Verifica o agrupamento e a soma das despesas por categoria.
 def test_calcular_despesas_por_categoria():
     categorias = {
         "1": {"nome": "Alimentação", "tipo": "DESPESA"},
@@ -45,6 +47,7 @@ def test_calcular_despesas_por_categoria():
     }
 
 
+# Verifica o retorno vazio quando não existem despesas.
 def test_calcular_despesas_por_categoria_sem_despesas():
     relatorio = criar_relatorio()
 
@@ -53,6 +56,7 @@ def test_calcular_despesas_por_categoria_sem_despesas():
     assert resultado == {}
 
 
+# Verifica o cálculo percentual das despesas por categoria.
 def test_calcular_percentual_por_categoria():
     categorias = {
         "1": {"nome": "Alimentação", "tipo": "DESPESA"},
@@ -74,6 +78,7 @@ def test_calcular_percentual_por_categoria():
     }
 
 
+# Verifica o retorno vazio quando não existem despesas para calcular percentuais.
 def test_calcular_percentual_sem_despesas():
     relatorio = criar_relatorio()
 
@@ -82,6 +87,7 @@ def test_calcular_percentual_sem_despesas():
     assert resultado == {}
 
 
+# Verifica a identificação do mês com menor gasto.
 def test_identificar_mes_mais_economico():
     despesas = {
         "1": {"data": "2026-01-10", "valor": 500},
@@ -101,6 +107,7 @@ def test_identificar_mes_mais_economico():
     }
 
 
+# Verifica o retorno None quando não existem despesas.
 def test_identificar_mes_mais_economico_sem_despesas():
     relatorio = criar_relatorio()
 
@@ -109,6 +116,7 @@ def test_identificar_mes_mais_economico_sem_despesas():
     assert resultado is None
 
 
+# Verifica se são retornados os três últimos meses.
 def test_obter_ultimos_meses():
     relatorio = criar_relatorio()
 
@@ -119,6 +127,7 @@ def test_obter_ultimos_meses():
     assert resultado[-1][1] <= 12
 
 
+# Verifica a comparação de receitas e despesas dos últimos meses.
 def test_comparar_ultimos_meses():
     relatorio = criar_relatorio()
 
@@ -126,6 +135,7 @@ def test_comparar_ultimos_meses():
     receitas = {}
     despesas = {}
 
+    # Gera lançamentos para cada mês retornado.
     for i, (ano, mes) in enumerate(meses, start=1):
         receitas[str(i)] = {
             "data": f"{ano}-{mes:02d}-10",
@@ -143,18 +153,20 @@ def test_comparar_ultimos_meses():
 
     assert len(resultado) == 3
 
+    # Confirma a presença dos totais de receitas e despesas.
     for valores in resultado.values():
         assert "receitas" in valores
         assert "despesas" in valores
 
 
-
+# Simula janeiro de 2027 para verificar a virada do ano.
 def test_obter_ultimos_meses_na_virada_do_ano(monkeypatch):
     class DataFalsa:
         @staticmethod
         def today():
             return date(2027, 1, 15)
 
+    # Substitui a data atual utilizada pelo módulo.
     monkeypatch.setattr(modulo_relatorio, "date", DataFalsa)
 
     relatorio = criar_relatorio()
@@ -167,6 +179,8 @@ def test_obter_ultimos_meses_na_virada_do_ano(monkeypatch):
         (2027, 1)
     ]
 
+
+# Verifica a comparação mensal atravessando a virada do ano.
 def test_comparar_ultimos_meses_na_virada_do_ano(monkeypatch):
     class DataFalsa:
         @staticmethod
@@ -177,6 +191,7 @@ def test_comparar_ultimos_meses_na_virada_do_ano(monkeypatch):
         def fromisoformat(data):
             return DataOriginal.fromisoformat(data)
 
+    # Simula a data atual e mantém a conversão de datas original.
     monkeypatch.setattr(modulo_relatorio, "date", DataFalsa)
 
     receitas = {
@@ -198,8 +213,9 @@ def test_comparar_ultimos_meses_na_virada_do_ano(monkeypatch):
 
     resultado = relatorio.comparar_ultimos_meses()
 
+    # Confirma os totais e os períodos corretamente identificados.
     assert resultado == {
         "11/2026": {"receitas": 1000, "despesas": 400},
         "12/2026": {"receitas": 2000, "despesas": 800},
         "01/2027": {"receitas": 3000, "despesas": 1200}
-    }    
+    }

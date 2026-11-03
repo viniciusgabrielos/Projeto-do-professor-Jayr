@@ -1,3 +1,4 @@
+
 import pytest
 from datetime import date
 from src.domain.categoria import Categoria, TipoCategoria
@@ -5,6 +6,8 @@ from src.domain.lancamento import Lancamento
 from src.domain.receita import Receita
 from src.domain.despesa import Despesa
 
+
+# Verifica a criação de uma receita válida e sua herança.
 def test_criar_receita_valida():
     categoria = Categoria(
         nome="Aulas",
@@ -26,6 +29,7 @@ def test_criar_receita_valida():
     assert receita.categoria is categoria
 
 
+# Verifica se receitas com valores inválidos são rejeitadas.
 def test_receita_rejeita_valor_invalido():
     categoria = Categoria(
         nome="Aulas",
@@ -45,6 +49,8 @@ def test_receita_rejeita_valor_invalido():
             forma_de_pagamento="PIX"
         )
 
+
+# Verifica se receitas sem uma categoria válida são rejeitadas.
 def test_receita_rejeita_categoria_invalida():
     with pytest.raises(
         ValueError,
@@ -59,18 +65,23 @@ def test_receita_rejeita_categoria_invalida():
         )
 
 
+# Verifica se uma despesa válida também é um lançamento.
 def test_verifica_se_despesa_tem_categoria_despesa():
-    categoria = Categoria(nome="Ifood", tipo=TipoCategoria.DESPESA,limite=500)
-    despesa = Despesa(valor=100,categoria=categoria,data=date.today(),descricao="Compra de uma pizza",forma_de_pagamento="Débito")
+    categoria = Categoria(nome="Ifood", tipo=TipoCategoria.DESPESA, limite=500)
+    despesa = Despesa(valor=100, categoria=categoria, data=date.today(), descricao="Compra de uma pizza", forma_de_pagamento="Débito")
 
-    assert isinstance(despesa,Despesa)
-    assert isinstance(despesa,Lancamento)
+    assert isinstance(despesa, Despesa)
+    assert isinstance(despesa, Lancamento)
 
+
+# Verifica se despesas com categorias de receita são rejeitadas.
 def test_rejeita_despesa_se_categoria_for_receita():
     with pytest.raises(ValueError, match="Uma despesa precisa de uma categoria do tipo DESPESA"):
-        categoria = Categoria(nome="Salário",tipo=TipoCategoria.RECEITA)
-        despesa = Despesa(valor=100,categoria=categoria,data=date.today(),descricao="Compra de uma pizza",forma_de_pagamento="Débito")
+        categoria = Categoria(nome="Salário", tipo=TipoCategoria.RECEITA)
+        despesa = Despesa(valor=100, categoria=categoria, data=date.today(), descricao="Compra de uma pizza", forma_de_pagamento="Débito")
 
+
+# Verifica se receitas com categorias de despesa são rejeitadas.
 def test_receita_rejeita_categoria_despesa():
     categoria = Categoria(
         nome="Alimentação",

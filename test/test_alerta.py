@@ -1,3 +1,4 @@
+
 import json
 from datetime import date
 from src.domain.alerta import Alerta, TipoAlerta
@@ -8,7 +9,7 @@ from src.domain.regras_alertas import verificar_alerta_alto_valor
 from src.domain.regras_alertas import verificar_alerta_limite_excedido
 
 
-
+# Verifica a criação de um alerta com dados válidos.
 def test_criar_alerta_com_dados_validos():
     alerta = Alerta(
         tipo=TipoAlerta.ALTO_VALOR,
@@ -20,6 +21,7 @@ def test_criar_alerta_com_dados_validos():
     assert alerta.data == date.today()
 
 
+# Verifica se o alerta rejeita um tipo inválido.
 def test_alerta_rejeita_tipo_invalido():
     with pytest.raises(ValueError):
         Alerta(
@@ -28,6 +30,7 @@ def test_alerta_rejeita_tipo_invalido():
         )
 
 
+# Verifica se mensagens vazias são rejeitadas.
 def test_alerta_rejeita_mensagem_vazia():
     with pytest.raises(ValueError):
         Alerta(
@@ -36,6 +39,7 @@ def test_alerta_rejeita_mensagem_vazia():
         )
 
 
+# Verifica se datas inválidas são rejeitadas.
 def test_alerta_rejeita_data_invalida():
     with pytest.raises(ValueError):
         Alerta(
@@ -45,8 +49,7 @@ def test_alerta_rejeita_data_invalida():
         )
 
 
-
-
+# Verifica se o alerta é persistido corretamente no JSON.
 def test_adicionar_alerta_salva_no_json(tmp_path):
     repositorio = Alerta_Repositorio(tmp_path / "alertas.json")
 
@@ -67,6 +70,7 @@ def test_adicionar_alerta_salva_no_json(tmp_path):
     assert dados["1"]["data"] == "2026-10-29"
 
 
+# Verifica se os IDs dos alertas são gerados sequencialmente.
 def test_adicionar_varios_alertas_gera_ids_sequenciais(tmp_path):
     repositorio = Alerta_Repositorio(tmp_path / "alertas.json")
 
@@ -85,6 +89,7 @@ def test_adicionar_varios_alertas_gera_ids_sequenciais(tmp_path):
     assert list(repositorio.listar_alertas().keys()) == ["1", "2"]
 
 
+# Verifica se o repositório retorna os alertas armazenados.
 def test_listar_alertas_retorna_os_alertas_salvos(tmp_path):
     repositorio = Alerta_Repositorio(tmp_path / "alertas.json")
 
@@ -100,9 +105,7 @@ def test_listar_alertas_retorna_os_alertas_salvos(tmp_path):
     assert alertas["1"]["tipo"] == "deficit_orcamentario"
 
 
-
-
-
+# Verifica se despesas abaixo do limite não geram alertas.
 def test_despesa_abaixo_do_limite_nao_gera_alerta(monkeypatch):
     monkeypatch.setattr(
         "src.domain.regras_alertas.carregar_configuracoes",
@@ -119,6 +122,7 @@ def test_despesa_abaixo_do_limite_nao_gera_alerta(monkeypatch):
     repositorio.adicionar_alerta.assert_not_called()
 
 
+# Verifica se despesas iguais ao limite geram alertas.
 def test_despesa_igual_ao_limite_gera_alerta(monkeypatch):
     monkeypatch.setattr(
         "src.domain.regras_alertas.carregar_configuracoes",
@@ -135,6 +139,7 @@ def test_despesa_igual_ao_limite_gera_alerta(monkeypatch):
     repositorio.adicionar_alerta.assert_called_once_with(resultado)
 
 
+# Verifica se despesas acima do limite geram alertas.
 def test_despesa_acima_do_limite_gera_alerta(monkeypatch):
     monkeypatch.setattr(
         "src.domain.regras_alertas.carregar_configuracoes",
@@ -151,10 +156,9 @@ def test_despesa_acima_do_limite_gera_alerta(monkeypatch):
     repositorio.adicionar_alerta.assert_called_once_with(resultado)
 
 
-
-
+# Verifica se despesas dentro do limite da categoria não geram alertas.
 def test_total_despesas_abaixo_do_limite_nao_gera_alerta():
-    
+
     despesa = Mock()
     despesa.valor = 100.0
     despesa.data = date(2026, 10, 20)
@@ -162,9 +166,9 @@ def test_total_despesas_abaixo_do_limite_nao_gera_alerta():
     despesa.categoria = Mock()
     despesa.categoria.id = 2
 
-   
     repositorio_despesas = Mock()
 
+    # Simula despesas anteriores da mesma categoria.
     repositorio_despesas.listar_despesas.return_value = {
         "1": {
             "valor": 200.0,
@@ -178,7 +182,7 @@ def test_total_despesas_abaixo_do_limite_nao_gera_alerta():
         }
     }
 
-
+    # Define o limite mensal da categoria.
     repositorio_despesas.categoria_repositorio.listar.return_value = {
         "2": {
             "nome": "Alimentação",
@@ -186,9 +190,7 @@ def test_total_despesas_abaixo_do_limite_nao_gera_alerta():
         }
     }
 
-    
     repositorio_alertas = Mock()
-
 
     resultado = verificar_alerta_limite_excedido(
         despesa,
@@ -196,12 +198,13 @@ def test_total_despesas_abaixo_do_limite_nao_gera_alerta():
         repositorio_alertas
     )
 
-   
     assert resultado is None
     repositorio_alertas.adicionar_alerta.assert_not_called()
 
+
+# Verifica se despesas acima do limite da categoria geram alertas.
 def test_total_despesas_acima_do_limite_gera_alerta():
-  
+
     despesa = Mock()
     despesa.valor = 250.0
     despesa.data = date(2026, 10, 20)
@@ -209,9 +212,9 @@ def test_total_despesas_acima_do_limite_gera_alerta():
     despesa.categoria = Mock()
     despesa.categoria.id = 2
 
-   
     repositorio_despesas = Mock()
 
+    # Simula despesas que ultrapassam o limite mensal.
     repositorio_despesas.listar_despesas.return_value = {
         "1": {
             "valor": 200.0,
@@ -227,11 +230,10 @@ def test_total_despesas_acima_do_limite_gera_alerta():
             "valor": 250.0,
             "categoria_id": 2,
             "data": "2026-10-20"
-}
+        }
     }
-    
 
- 
+    # Define o limite mensal da categoria.
     repositorio_despesas.categoria_repositorio.listar.return_value = {
         "2": {
             "nome": "Alimentação",
@@ -239,7 +241,6 @@ def test_total_despesas_acima_do_limite_gera_alerta():
         }
     }
 
-    
     repositorio_alertas = Mock()
 
     resultado = verificar_alerta_limite_excedido(
@@ -247,7 +248,6 @@ def test_total_despesas_acima_do_limite_gera_alerta():
         repositorio_despesas,
         repositorio_alertas
     )
-
 
     assert resultado is not None
     assert resultado.tipo == TipoAlerta.LIMITE_EXCEDIDO
