@@ -105,3 +105,23 @@ def test_editar_categoria_inexistente(tmp_path):
         99,
         {"nome": "Supermercado"}
         )
+
+def test_len_categoria():
+    categoria = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.DESPESA,
+        limite=500
+    )
+
+    assert len(categoria) == 11
+
+def test_contains_categoria():
+    categoria = Categoria(
+        nome="Alimentação",
+        tipo=TipoCategoria.DESPESA,
+        limite=500
+    )
+
+    assert "alim" in categoria
+    assert "ALIMENTAÇÃO" in categoria
+    assert "transporte" not in categoria

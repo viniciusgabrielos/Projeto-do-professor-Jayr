@@ -116,4 +116,10 @@ class Categoria:
         "Limite: Não possui"
     )
 
-    
+    def __len__(self):
+    # Retorna o tamanho do nome
+        return len(self.nome)
+
+    def __contains__(self, item):
+    # Verifica se o texto está no nome
+        return item.casefold() in self.nome.casefold()
