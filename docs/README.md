@@ -4,7 +4,7 @@
 
 Sistema de controle financeiro pessoal desenvolvido em Python como projeto acadêmico da disciplina de Programação Orientada a Objetos (POO).
 
-O sistema permite registrar receitas e despesas, organizar categorias financeiras, acompanhar o saldo acumulado, cadastrar orçamentos mensais e gerar relatórios e alertas relacionados à movimentação financeira.
+O sistema permite registrar receitas e despesas, organizar categorias financeiras, acompanhar o saldo acumulado, cadastrar orçamentos mensais e gerar relatórios e alertas relacionados à movimentação financeira. É necessária a leitura completa desse material para um melhor aproveitamento do sistema.
 
 ## Objetivo
 
@@ -237,6 +237,13 @@ Os testes automatizados estão organizados em arquivos que verificam as principa
 - **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período. Assim, é responsabilidade do usuário adicionar orçamento e depois, preferencialmente, no último dia do mês, realizar o comando de fechar o mês. Sem esse passo a passo, há um comprometimento de algumas funcionalidades, como a falta da emissão do alerta do saldo mensal ser negativo.
 - **Receitas e despesas:** o sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
 - **Dados iniciais (seeds):** os arquivos JSON disponibilizados no projeto contêm dados iniciais que permitem executar e testar as funcionalidades do sistema sem precisar cadastrar todas as informações manualmente desde o início.
+- **Main.py:** todos os comandos no main.py podem ser acessados usando "python main.py comando-escolhido", com exceção do adicionar-orcamento, é necessário informar além do comando, mês que está fazendo o orçamento, o ano e a receita prevista para esse mês, assim:
+```bash
+python main.py adicionar-orcamento 10 2026 4000
+```
+Nesse exemplo, o usuário está adicionando um orçamento do mês de outubro, do ano de 2026 e está prevendo que irá receber 4000 reais. 
+É interessante que isso seja feito no início de cada mês.
+
 ## Autor
 
 Vinicius Gabriel Oliveira Santos
