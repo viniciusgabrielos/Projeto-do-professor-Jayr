@@ -219,8 +219,18 @@ O projeto utiliza Pytest para testes automatizados das classes e funcionalidades
 Para executar os testes, utilize:
 
 ```bash
-pytest
+pytest -q
 ```
+
+### Cobertura dos testes
+
+Os testes automatizados estão organizados em arquivos que verificam as principais funcionalidades do sistema:
+
+- **`test_alerta.py`**: testa a criação, validação e persistência de alertas, além das regras de geração de alertas de alto valor e limite excedido por categoria.
+- **`test_categoria_repository.py`**: verifica o cadastro, prevenção de duplicidade, edição e identificação de categorias, incluindo os métodos especiais `__len__` e `__contains__`.
+- **`test_lancamento.py`**: testa a criação e validação de lançamentos, receitas e despesas, incluindo a herança e a compatibilidade entre categorias e tipos de lançamento.
+- **`test_orcamento_mensal.py`**: verifica os cálculos de receitas, despesas, saldo e déficit mensal, além da separação dos lançamentos por período.
+- **`test_relatorio.py`**: testa os cálculos de despesas e percentuais por categoria, identificação do mês mais econômico e comparação entre períodos, incluindo a virada do ano.
 
 ## Decisões de design
 
