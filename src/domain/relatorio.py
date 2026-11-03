@@ -5,24 +5,22 @@ from src.domain.settings import carregar_configuracoes
 
 class Relatorio:
     """
-    Representa a estrutura responsável pela geração de
-    relatórios e estatísticas financeiras do sistema.
-
-    Permite consultar despesas por categoria, calcular
-    percentuais de despesas, identificar o mês mais econômico
-    e comparar receitas e despesas dos últimos três meses.
+    Responsável pela geração de relatórios financeiros.
     """
 
     def __init__(self, receita_repositorio, despesa_repositorio):
+        # Inicializa os repositórios utilizados
         self.receita_repositorio = receita_repositorio
         self.despesa_repositorio = despesa_repositorio
 
     def calcular_despesas_por_categoria(self):
+        # Recupera categorias e despesas
         categorias = self.despesa_repositorio.categoria_repositorio.listar()
         despesas = self.despesa_repositorio.listar_despesas()
 
         totais = {}
 
+        # Agrupa despesas por categoria
         for id_despesa, dados in despesas.items():
             categoria_id = dados["categoria_id"]
             valor = dados["valor"]
@@ -39,15 +37,18 @@ class Relatorio:
         return totais
 
     def calcular_percentual_por_categoria(self):
+        # Obtém os totais por categoria
         totais = self.calcular_despesas_por_categoria()
 
         total_despesas = sum(totais.values())
 
+        # Evita divisão por zero
         if total_despesas == 0:
             return {}
 
         percentuais = {}
 
+        # Calcula a participação de cada categoria
         for categoria, valor in totais.items():
             percentuais[categoria] = round(
                 (valor / total_despesas) * 100, 2
@@ -60,6 +61,7 @@ class Relatorio:
 
         totais_por_mes = {}
 
+        # Agrupa despesas por mês e ano
         for dados in despesas.values():
             data_despesa = date.fromisoformat(dados["data"])
             chave_mes = (data_despesa.year, data_despesa.month)
@@ -68,9 +70,11 @@ class Relatorio:
                 totais_por_mes.get(chave_mes, 0) + dados["valor"]
             )
 
+        # Retorna None se não houver despesas
         if not totais_por_mes:
             return None
 
+        # Identifica o mês com menor despesa
         mes_mais_economico = min(
             totais_por_mes,
             key=totais_por_mes.get
@@ -85,12 +89,14 @@ class Relatorio:
         }
 
     def _obter_ultimos_meses(self):
+        # Obtém a quantidade de meses configurada
         configuracoes = carregar_configuracoes()
         quantidade_meses = configuracoes["meses_comparacao"]
 
         hoje = date.today()
         meses = []
 
+        # Monta os meses em ordem cronológica
         for deslocamento in range(quantidade_meses - 1, -1, -1):
             indice_mes = hoje.year * 12 + (hoje.month - 1) - deslocamento
             ano, mes = divmod(indice_mes, 12)
@@ -100,8 +106,10 @@ class Relatorio:
         return meses
 
     def comparar_ultimos_meses(self):
+        # Obtém os meses para comparação
         meses = self._obter_ultimos_meses()
 
+        # Inicializa receitas e despesas de cada mês
         resultado = {
             (ano, mes): {
                 "receitas": 0,
@@ -113,6 +121,7 @@ class Relatorio:
         receitas = self.receita_repositorio.listar_receitas()
         despesas = self.despesa_repositorio.listar_despesas()
 
+        # Distribui receitas pelos meses correspondentes
         for dados in receitas.values():
             data_receita = date.fromisoformat(dados["data"])
             chave_mes = (data_receita.year, data_receita.month)
@@ -120,6 +129,7 @@ class Relatorio:
             if chave_mes in resultado:
                 resultado[chave_mes]["receitas"] += dados["valor"]
 
+        # Distribui despesas pelos meses correspondentes
         for dados in despesas.values():
             data_despesa = date.fromisoformat(dados["data"])
             chave_mes = (data_despesa.year, data_despesa.month)
@@ -127,6 +137,7 @@ class Relatorio:
             if chave_mes in resultado:
                 resultado[chave_mes]["despesas"] += dados["valor"]
 
+        # Formata os meses para exibição
         return {
             f"{mes:02d}/{ano}": valores
             for (ano, mes), valores in resultado.items()

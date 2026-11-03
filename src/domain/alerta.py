@@ -1,3 +1,4 @@
+
 from enum import Enum
 from datetime import date
 
@@ -8,14 +9,15 @@ class TipoAlerta(Enum):
     DEFICIT_ORCAMENTARIO = "deficit_orcamentario"
     PREVISAO_RECEITA = "previsao_receita"
     META_ECONOMIA = "meta_economia"
+
+
 class Alerta:
     """
-    Classe responsável por representar e gerenciar os alertas gerados pelo sistema, armazenando informações como a data, o tipo e a mensagem do alerta, além de permitir seu registro e apresentação ao usuário.
-
+    Representa alertas financeiros gerados pelo sistema.
     """
-  
 
     def __init__(self, tipo, mensagem, data=None):
+        # Inicializa o alerta
         self.tipo = tipo
         self.mensagem = mensagem
         self.data = data if data is not None else date.today()
@@ -26,7 +28,8 @@ class Alerta:
 
     @tipo.setter
     def tipo(self, tipo):
-        if not isinstance(tipo,TipoAlerta):
+        # Valida o tipo do alerta
+        if not isinstance(tipo, TipoAlerta):
             raise ValueError("O tipo do alerta deve ser um TipoAlerta Válido")
 
         self._tipo = tipo
@@ -37,6 +40,7 @@ class Alerta:
 
     @mensagem.setter
     def mensagem(self, mensagem):
+        # Impede mensagens vazias
         if not isinstance(mensagem, str) or not mensagem.strip():
             raise ValueError("A mensagem deve ser um texto não vazio")
 
@@ -48,8 +52,8 @@ class Alerta:
 
     @data.setter
     def data(self, data):
+        # Valida a data do alerta
         if not isinstance(data, date):
             raise ValueError("A data do alerta deve ser uma data válida")
 
         self._data = data
-        

@@ -1,20 +1,23 @@
+
 from src.domain.categoria import Categoria
 from datetime import date
 
+
 class Lancamento:
     """
-    Classe base que representa um lançamento financeiro do sistema.
-
-    Armazena as informações comuns às movimentações financeiras,
-    como valor, categoria, data, descrição e forma de pagamento.
-
-    Serve como classe-pai para Receita e Despesa, permitindo
-    reutilizar características e comportamentos comuns entre
-    os dois tipos de lançamento.
+    Classe base dos lançamentos financeiros.
     """
-   
 
-    def __init__(self, valor, categoria, data, descricao, forma_de_pagamento,id = None):
+    def __init__(
+        self,
+        valor,
+        categoria,
+        data,
+        descricao,
+        forma_de_pagamento,
+        id=None
+    ):
+        # Inicializa os atributos do lançamento
         self.valor = valor
         self.categoria = categoria
         self.data = data
@@ -22,20 +25,17 @@ class Lancamento:
         self.forma_de_pagamento = forma_de_pagamento
         self.id = id
 
- 
-
     @property
     def valor(self):
         return self.__valor
 
     @valor.setter
     def valor(self, valor_cadastrado):
+        # Impede valores não positivos
         if valor_cadastrado > 0:
             self.__valor = valor_cadastrado
         else:
             raise ValueError("O valor deve ser maior que 0")
-
-   
 
     @property
     def categoria(self):
@@ -43,12 +43,11 @@ class Lancamento:
 
     @categoria.setter
     def categoria(self, categoria_cadastrada):
-        if isinstance(categoria_cadastrada,Categoria):
+        # Exige uma categoria válida
+        if isinstance(categoria_cadastrada, Categoria):
             self.__categoria = categoria_cadastrada
         else:
             raise ValueError("O lançamento deve possuir uma categoria")
-
-  
 
     @property
     def data(self):
@@ -56,14 +55,11 @@ class Lancamento:
 
     @data.setter
     def data(self, data_cadastrada):
-        if not isinstance(data_cadastrada,date):
+        # Valida o tipo da data
+        if not isinstance(data_cadastrada, date):
             raise ValueError("Data não aceita")
-        
-            
         else:
             self.__data = data_cadastrada
-
-    
 
     @property
     def descricao(self):
@@ -74,7 +70,8 @@ class Lancamento:
         self.__descricao = descricao_cadastrada
 
     def __str__(self):
-        return(
+        # Formata os dados para exibição
+        return (
             f"Valor: R$ {self.valor:.2f} | "
             f"Categoria: {self.categoria.nome} | "
             f"Data: {self.data} | "
@@ -83,20 +80,24 @@ class Lancamento:
         )
 
     def to_dict(self):
-            return {
-                "valor": self.valor,
-                "categoria_id": self.categoria.id,
-                "data": self.data.isoformat(),
-                "descricao": self.descricao,
-                "forma_de_pagamento": self.forma_de_pagamento,
-                "id": self.id,
-            }
+        # Converte o lançamento em dicionário
+        return {
+            "valor": self.valor,
+            "categoria_id": self.categoria.id,
+            "data": self.data.isoformat(),
+            "descricao": self.descricao,
+            "forma_de_pagamento": self.forma_de_pagamento,
+            "id": self.id,
+        }
+
     @classmethod
     def from_dict(cls, dados, categoria_repositorio):
+        # Recupera a categoria associada
         categoria = categoria_repositorio.buscar_por_id(
-        dados["categoria_id"]
-    )
+            dados["categoria_id"]
+        )
 
+        # Reconstrói o lançamento
         return cls(
             valor=dados["valor"],
             categoria=categoria,
