@@ -40,7 +40,7 @@ O projeto utiliza uma organização baseada em classes de domínio e repositóri
 - **Lancamento:** classe-base de receitas e despesas. Possui validações de valor, categoria e data, além de métodos de conversão de dados.
 - **Receita:** representa entradas financeiras e herda os atributos e comportamentos de `Lancamento`. Exige uma categoria do tipo receita.
 - **Despesa:** representa saídas financeiras e herda os atributos e comportamentos de `Lancamento`. Exige uma categoria do tipo despesa.
-- **Categoria:** representa a classificação dos lançamentos, contendo nome, tipo, descrição e limite. Categorias de despesas possuem limite positivo, enquanto categorias de receitas não possuem limite.
+- **Categoria:** representa a classificação dos lançamentos, contendo nome, tipo, descrição e limite. Categorias de despesas possuem limite mensal positivo, enquanto categorias de receitas não possuem limite.
 - **OrcamentoMensal:** realiza cálculos financeiros de determinado mês, incluindo receitas, despesas, saldo, déficit, comparação com receita prevista e meta de economia.
 - **SaldoAtual:** calcula o saldo financeiro acumulado considerando todas as receitas e despesas registradas.
 - **Relatorio:** organiza informações financeiras, como despesas por categoria, percentuais, mês mais econômico e comparativos mensais.
@@ -105,31 +105,97 @@ Projeto-do-professor-Jayr/
 
 ## Instalação e execução
 
-### Pré-requisitos
+### 1. Pré-requisitos
 
-- Python 3 instalado.
-- Git instalado, caso o projeto seja baixado diretamente pelo repositório.
+Antes de iniciar, certifique-se de que possui o Python 3 e o Git instalados.
 
-### 1. Clonar o repositório
-
-```bash
-git clone https://github.com/viniciusgabrielos/Projeto-do-professor-Jayr
-```
-
-### 2. Acessar a pasta do projeto
+Para verificar a instalação do Python, execute:
 
 ```bash
-cd Projeto_do_professor_Jayr
+python --version
 ```
 
-### 3. Executar o sistema
+### 2. Clonar o repositório
+
+No terminal, execute:
+
+```bash
+git clone https://github.com/viniciusgabrielos/Projeto-do-professor-Jayr.git
+```
+
+Em seguida, acesse a pasta do projeto:
+
+```bash
+cd Projeto-do-professor-Jayr
+```
+
+### 3. Criar o ambiente virtual
+
+Para manter as dependências isoladas do restante do sistema, crie um ambiente virtual:
+
+```bash
+python -m venv .venv
+```
+
+### 4. Ativar o ambiente virtual
+
+**Windows (PowerShell):**
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+**Windows (Prompt de Comando – CMD):**
+
+```cmd
+.\.venv\Scripts\activate.bat
+```
+
+**Linux ou macOS:**
+
+```bash
+source .venv/bin/activate
+```
+
+#### Possível problema no PowerShell
+
+Caso o PowerShell bloqueie a ativação do ambiente virtual por causa da política de execução de scripts, execute:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Em seguida, tente ativar novamente:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Essa configuração vale somente para a sessão atual do terminal.
+
+### 5. Executar o sistema
+
+Com o ambiente virtual ativado, execute:
 
 ```bash
 python main.py
 ```
 
-O comando apresenta a ajuda do sistema quando nenhum subcomando é informado.
+Para visualizar os comandos e opções disponíveis:
 
+```bash
+python main.py --help
+```
+
+### 6. Desativar o ambiente virtual
+
+Quando terminar de utilizar o sistema, execute:
+
+```bash
+deactivate
+```
+
+Para utilizar o projeto novamente, basta acessar sua pasta e ativar o ambiente virtual já criado.
 ## Comandos disponíveis
 
 Todos os comandos devem ser executados no terminal, a partir da pasta principal do projeto, utilizando a seguinte estrutura:
@@ -273,20 +339,27 @@ Os testes automatizados estão organizados em arquivos que verificam as principa
 - **`test_lancamento.py`**: testa a criação e validação de lançamentos, receitas e despesas, incluindo a herança e a compatibilidade entre categorias e tipos de lançamento.
 - **`test_orcamento_mensal.py`**: verifica os cálculos de receitas, despesas, saldo e déficit mensal, além da separação dos lançamentos por período.
 - **`test_relatorio.py`**: testa os cálculos de despesas e percentuais por categoria, identificação do mês mais econômico e comparação entre períodos, incluindo a virada do ano.
+## Decisões de Design
 
-- **Orçamento mensal:** o orçamento é cadastrado previamente para um mês e ano específicos. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período. Recomenda-se que o usuário cadastre o orçamento no início do mês e realize o fechamento, preferencialmente, no último dia do período. Caso o fechamento não seja realizado, algumas funcionalidades, como a geração de alertas de déficit mensal, podem ser comprometidas.
+- **Orçamento mensal:** O orçamento é cadastrado previamente para um mês e ano específicos. O fechamento mensal é realizado manualmente e considera somente o mês atual. Para realizar o fechamento, é necessário que exista um orçamento previamente cadastrado para o período. Recomenda-se que o usuário cadastre o orçamento no início do mês e realize o fechamento, preferencialmente, no último dia do período. Caso o fechamento não seja realizado, algumas funcionalidades, como a geração de alertas de déficit mensal, podem ser comprometidas.
 
-- **Receitas e despesas:** o sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
+- **Receitas e despesas:** O sistema permite cadastrar, listar e excluir receitas e despesas, mas não possui funcionalidade de edição desses lançamentos.
 
-- **Dados iniciais (seeds):** os arquivos JSON disponibilizados no projeto contêm dados iniciais que permitem executar e testar as funcionalidades do sistema sem precisar cadastrar todas as informações manualmente desde o início.
+- **Dados iniciais (seeds):** Os arquivos JSON disponibilizados no projeto contêm dados iniciais que permitem executar e testar as funcionalidades do sistema sem precisar cadastrar todas as informações manualmente desde o início.
 
-- **Interface de comandos (`main.py`):** os comandos do sistema são executados por meio do terminal, utilizando a estrutura `python main.py comando`. O comando `adicionar-orcamento` possui argumentos posicionais obrigatórios, sendo necessário informar o mês, o ano e a receita prevista. Por exemplo:
+- **Interface de comandos (`main.py`):** Os comandos do sistema são executados por meio do terminal, utilizando a estrutura `python main.py comando`. O comando `adicionar-orcamento` possui argumentos posicionais obrigatórios, sendo necessário informar o mês, o ano e a receita prevista. Por exemplo:
+
+
 
 ```bash
 python main.py adicionar-orcamento 10 2026 4000
 ```
 
 Nesse exemplo, é cadastrado um orçamento para outubro de 2026, com previsão de receita de R$ 4.000,00. Recomenda-se realizar esse cadastro no início de cada mês.
+
+- **Período dos relatórios:** O período utilizado para a geração dos relatórios comparativos é definido como uma política do sistema, centralizada no arquivo `settings.py`. Atualmente, essa política estabelece um intervalo de 3 meses, permitindo que os relatórios apresentem comparações dos dados financeiros referentes aos últimos três meses. Essa abordagem facilita futuras alterações no período de análise, permitindo modificar a política em um único local, sem alterar diretamente a lógica de geração dos relatórios.
+
+- **Alertas:** Os alertas, no geral, não tem um caráter proibitivo, as proibições quantos valores inválidos, formato inválido de data, exclusão de uma categoria que possui receita ou despesa cadastrada não se enquadram como alertas. Os Alertas quando são mostrados, como uma despesa que teve seu limite mensal de categoria excedido, terá sua despesa devidamente cadastrada.
 ## Autor
 
 Vinicius Gabriel Oliveira Santos
